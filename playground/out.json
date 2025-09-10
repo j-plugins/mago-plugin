@@ -1,0 +1,137 @@
+{
+  "issues": [
+    {
+      "level": "Error",
+      "code": "invalid-operand",
+      "message": "Invalid type for left operand.",
+      "notes": [
+        "The type(s) of the left operand are not compatible with this binary operation."
+      ],
+      "help": "Ensure the left operand has a type suitable for this operation (e.g., number for arithmetic, string for concatenation).",
+      "annotations": [
+        {
+          "message": "Cannot perform arithmetic operation with non-numeric type string('text')",
+          "kind": "Secondary",
+          "span": {
+            "file_id": {
+              "name": "1.php",
+              "path": "/Users/xepozz/IdeaProjects/j-plugins/mago-plugin/playground/1.php",
+              "size": 67,
+              "file_type": "Host"
+            },
+            "start": {
+              "offset": 51,
+              "line": 5
+            },
+            "end": {
+              "offset": 53,
+              "line": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": "Warning",
+      "code": "mixed-assignment",
+      "message": "Assigning `mixed` type to a variable may lead to unexpected behavior.",
+      "notes": [
+        "Using `mixed` can lead to runtime errors if the variable is used in a way that assumes a specific type."
+      ],
+      "help": "Consider using a more specific type to avoid potential issues.",
+      "annotations": [
+        {
+          "message": "This expression has type `mixed`.",
+          "kind": "Secondary",
+          "span": {
+            "file_id": {
+              "name": "1.php",
+              "path": "/Users/xepozz/IdeaProjects/j-plugins/mago-plugin/playground/1.php",
+              "size": 67,
+              "file_type": "Host"
+            },
+            "start": {
+              "offset": 51,
+              "line": 5
+            },
+            "end": {
+              "offset": 55,
+              "line": 5
+            }
+          }
+        },
+        {
+          "message": "Assigning `mixed` type here.",
+          "kind": "Primary",
+          "span": {
+            "file_id": {
+              "name": "1.php",
+              "path": "/Users/xepozz/IdeaProjects/j-plugins/mago-plugin/playground/1.php",
+              "size": 67,
+              "file_type": "Host"
+            },
+            "start": {
+              "offset": 46,
+              "line": 5
+            },
+            "end": {
+              "offset": 48,
+              "line": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": "Error",
+      "code": "mixed-argument",
+      "message": "The first value for `echo` is too general.",
+      "notes": [
+        "The expected type `null|scalar` is more specific."
+      ],
+      "help": "Add a specific type hint or assertion for this value.",
+      "annotations": [
+        {
+          "message": "Type `mixed` is too broad",
+          "kind": "Primary",
+          "span": {
+            "file_id": {
+              "name": "1.php",
+              "path": "/Users/xepozz/IdeaProjects/j-plugins/mago-plugin/playground/1.php",
+              "size": 67,
+              "file_type": "Host"
+            },
+            "start": {
+              "offset": 63,
+              "line": 7
+            },
+            "end": {
+              "offset": 65,
+              "line": 7
+            }
+          }
+        },
+        {
+          "message": "`echo` called here",
+          "kind": "Secondary",
+          "span": {
+            "file_id": {
+              "name": "1.php",
+              "path": "/Users/xepozz/IdeaProjects/j-plugins/mago-plugin/playground/1.php",
+              "size": 67,
+              "file_type": "Host"
+            },
+            "start": {
+              "offset": 58,
+              "line": 7
+            },
+            "end": {
+              "offset": 62,
+              "line": 7
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
