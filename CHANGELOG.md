@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# mago-plugin Changelog
+# Mago Changelog
 
 ## [Unreleased]
 ### Added

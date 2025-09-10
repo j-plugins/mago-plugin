@@ -1,13 +1,13 @@
-package com.github.xepozz.magoplugin
+package com.github.xepozz.mago
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 
 @NonNls
-private const val BUNDLE = "messages.MyBundle"
+private const val BUNDLE = "messages.MagoBundle"
 
-object MyBundle : DynamicBundle(BUNDLE) {
+object MagoBundle : DynamicBundle(BUNDLE) {
 
     @JvmStatic
     fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =

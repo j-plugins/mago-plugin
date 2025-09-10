@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.github.xepozz.mago">
+        <magoConfigurationProvider implementation="com.github.xepozz.mago.remote.MagoRemoteConfigurationProvider"/>
+    </extensions>
+</idea-plugin>

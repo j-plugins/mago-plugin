@@ -1,15 +1,64 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.xepozz.magoplugin</id>
-    <name>mago-plugin</name>
+    <id>com.github.xepozz.mago</id>
+    <name>Mago – PHP Toolchain</name>
     <vendor>xepozz</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.jetbrains.php</depends>
+    <depends>com.intellij.modules.ultimate</depends>
+    <depends config-file="mago-remote-interpreter.xml" optional="true">
+        org.jetbrains.plugins.phpstorm-remote-interpreter
+    </depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <resource-bundle>messages.MagoBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.xepozz.magoplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.xepozz.magoplugin.startup.MyProjectActivity" />
+        <projectConfigurable
+                instance="com.github.xepozz.mago.MagoConfigurable"
+                bundle="messages.MagoBundle"
+                key="configurable.quality.tool.php.mago"
+                id="settings.php.quality.tools.php.mago"
+                parentId="settings.php.quality.tools"
+                groupWeight="30"
+        />
+
+        <globalInspection
+                language="PHP"
+                shortName="MagoGlobal"
+                groupPath="PHP"
+                groupName="Quality tools"
+                enabledByDefault="false"
+                level="WEAK WARNING"
+                implementationClass="com.github.xepozz.mago.MagoGlobalInspection"
+                key="inspection.mago.global.display.name"/>
+
+        <externalAnnotator
+                language="PHP"
+                implementationClass="com.github.xepozz.mago.MagoAnnotatorProxy"/>
     </extensions>
+
+    <extensions defaultExtensionNs="com.jetbrains.php">
+        <!--         <tools.projectConfigurableForm instance="com.github.xepozz.mago.MagoConfigurable"/>-->
+        <!--        <tools.quality.phpcs.phpCSConfigurationProvider implementation=""-->
+        <tools.quality.type implementation="com.github.xepozz.mago.MagoQualityToolType"/>
+        <composerConfigClient implementation="com.github.xepozz.mago.MagoComposerConfig"/>
+        <openSettingsProvider implementation="com.github.xepozz.mago.MagoOpenSettingsProvider"/>
+        <config.interpreters.PhpInterpretersStateListener
+                implementation="com.github.xepozz.mago.MagoInterpreterStateListener"/>
+    </extensions>
+
+    <extensionPoints>
+        <extensionPoint
+                dynamic="true"
+                name="magoConfigurationProvider"
+                interface="com.github.xepozz.mago.MagoConfigurationProvider"/>
+    </extensionPoints>
+    <actions>
+        <action
+                id="com.github.xepozz.mago.MagoAddToIgnoredAction"
+                class="com.github.xepozz.mago.MagoAddToIgnoredAction">
+            <add-to-group group-id="PHPQualityToolsAddToIgnoredList" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
