@@ -1,6 +1,7 @@
 {
     "require-dev": {
-        "carthage-software/mago": "1.0.0-beta.12"
+        "carthage-software/mago": "1.0.0-beta.12",
+        "vimeo/psalm": "^6.13"
     },
     "config": {
         "allow-plugins": {
