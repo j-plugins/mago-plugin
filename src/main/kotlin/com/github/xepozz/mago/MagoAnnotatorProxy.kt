@@ -4,8 +4,9 @@ import com.intellij.codeInspection.InspectionProfile
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import com.jetbrains.php.config.PhpRuntimeConfiguration
-import com.jetbrains.php.tools.quality.*
+import com.jetbrains.php.tools.quality.QualityToolAnnotator
+import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
+import com.jetbrains.php.tools.quality.QualityToolConfiguration
 
 open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>() {
     companion object {
@@ -26,7 +27,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
             add("analyze")
             add("--reporting-format=json")
-            filePath?.let { add(it) }
+//            filePath?.let { add(it) }
         }
 //            .apply { println("analyze options: ${this.joinToString(" ")}") }
     }
@@ -54,7 +55,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             LOG.warn("isOnTheFly is False")
         }
 
-        return MagoQualityToolAnnotatorInfo(file, tool, inspectionProfile, project, configuration, isOnTheFly)
+        return QualityToolAnnotatorInfo(file, tool, inspectionProfile, project, configuration, false)
     }
 
     override fun getQualityToolType() = MagoQualityToolType.INSTANCE
@@ -63,4 +64,6 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         MagoMessageProcessor(collectedInfo)
 
     override fun getPairedBatchInspectionShortName() = qualityToolType.inspectionId
+
+    override fun runOnTempFiles() = false
 }

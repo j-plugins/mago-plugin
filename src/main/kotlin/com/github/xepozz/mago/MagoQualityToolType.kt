@@ -1,12 +1,13 @@
 package com.github.xepozz.mago
 
+import com.github.xepozz.mago.MagoConfigurationBaseManager.Companion.MAGO
 import com.intellij.codeInspection.InspectionProfile
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager
 import com.intellij.util.ObjectUtils.tryCast
-import com.jetbrains.php.tools.quality.*
-import com.github.xepozz.mago.MagoConfigurationBaseManager.Companion.MAGO
+import com.jetbrains.php.tools.quality.QualityToolType
+import com.jetbrains.php.tools.quality.QualityToolValidationGlobalInspection
 
 class MagoQualityToolType : QualityToolType<MagoConfiguration>() {
     override fun getDisplayName() = MAGO
@@ -41,11 +42,8 @@ class MagoQualityToolType : QualityToolType<MagoConfiguration>() {
         return tryCast(inspectionTool.tool, MagoGlobalInspection::class.java)
     }
 
-    override fun getInspectionShortName(project: Project): String {
-        val tool = getGlobalTool(project, null)
-
-        return tool?.shortName ?: inspection.shortName
-    }
+    override fun getInspectionShortName(project: Project) = getGlobalTool(project, null)?.shortName
+        ?: inspection.shortName
 
     companion object {
         val INSTANCE = MagoQualityToolType()
