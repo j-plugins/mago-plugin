@@ -7,5 +7,9 @@
                 language="TOML"
                 fileNamesCaseInsensitive="mago.toml"
         />
+        <psi.referenceContributor
+                language="TOML"
+                implementation="com.github.xepozz.mago.reference.MagoTomlReferenceContributor"
+        />
     </extensions>
 </idea-plugin>
