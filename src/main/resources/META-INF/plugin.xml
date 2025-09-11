@@ -28,7 +28,7 @@
                 shortName="MagoGlobal"
                 groupPath="PHP"
                 groupName="Quality tools"
-                enabledByDefault="false"
+                enabledByDefault="true"
                 level="WEAK WARNING"
                 implementationClass="com.github.xepozz.mago.MagoGlobalInspection"
                 key="inspection.mago.global.display.name"/>
