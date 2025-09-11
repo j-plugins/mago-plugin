@@ -1,0 +1,11 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="Mago File"
+                implementationClass="com.github.xepozz.mago.file.MagoTomlFileType"
+                fieldName="INSTANCE"
+                language="TOML"
+                fileNamesCaseInsensitive="mago.toml"
+        />
+    </extensions>
+</idea-plugin>
