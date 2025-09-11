@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.github.xepozz.mago</id>
     <name>Mago – PHP Toolchain</name>
-    <vendor>xepozz</vendor>
+    <vendor email="xepozz@list.ru" url="https://github.com/xepozz">Dmitrii Derepko (@xepozz)</vendor>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
