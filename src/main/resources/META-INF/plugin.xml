@@ -7,7 +7,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
     <depends optional="true" config-file="language-toml.xml">org.toml.lang</depends>
-    <depends config-file="mago-remote-interpreter.xml" optional="true">
+    <depends config-file="php-remote-interpreter.xml" optional="true">
         org.jetbrains.plugins.phpstorm-remote-interpreter
     </depends>
 
