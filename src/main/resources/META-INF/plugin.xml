@@ -15,13 +15,23 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable
-                instance="com.github.xepozz.mago.MagoConfigurable"
+                instance="com.github.xepozz.mago.config.MagoConfigurable"
                 bundle="messages.MagoBundle"
                 key="configurable.quality.tool.php.mago"
                 id="settings.php.quality.tools.php.mago"
                 parentId="settings.php.quality.tools"
                 groupWeight="30"
         />
+
+        <localInspection
+                language="PHP"
+                shortName="MagoValidationInspection"
+                groupPath="PHP"
+                groupName="Quality tools"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="com.github.xepozz.mago.MagoValidationInspection"
+                key="inspection.mago.display.name"/>
 
         <globalInspection
                 language="PHP"
@@ -52,7 +62,7 @@
         <extensionPoint
                 dynamic="true"
                 name="magoConfigurationProvider"
-                interface="com.github.xepozz.mago.MagoConfigurationProvider"/>
+                interface="com.github.xepozz.mago.config.MagoConfigurationProvider"/>
     </extensionPoints>
     <actions>
         <action
