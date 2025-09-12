@@ -14,6 +14,16 @@
     <resource-bundle>messages.MagoBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                id="mago.toml"
+                name="Mago File"
+                implementationClass="com.github.xepozz.mago.file.MagoTextFileType"
+                fieldName="INSTANCE"
+                language="TEXT"
+                fileNames="mago.toml"
+                fileNamesCaseInsensitive="mago.toml"
+                order="last"
+        />
         <externalFormatProcessor implementation="com.github.xepozz.mago.formatter.MagoExternalFormatter" order="first" />
         <projectConfigurable
                 instance="com.github.xepozz.mago.config.MagoConfigurable"

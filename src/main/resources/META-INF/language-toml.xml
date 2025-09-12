@@ -5,7 +5,9 @@
                 implementationClass="com.github.xepozz.mago.file.MagoTomlFileType"
                 fieldName="INSTANCE"
                 language="TOML"
+                fileNames="mago.toml"
                 fileNamesCaseInsensitive="mago.toml"
+                order="before mago.toml"
         />
         <psi.referenceContributor
                 language="TOML"

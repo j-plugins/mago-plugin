@@ -2,10 +2,10 @@ package com.github.xepozz.mago.file
 
 import com.github.xepozz.mago.MagoIcons
 import com.intellij.openapi.fileTypes.LanguageFileType
-import org.toml.lang.TomlLanguage
+import com.intellij.openapi.fileTypes.PlainTextLanguage
 import java.io.Serializable
 
-class MagoTomlFileType private constructor(): LanguageFileType(TomlLanguage), Serializable {
+class MagoTextFileType private constructor() : LanguageFileType(PlainTextLanguage.INSTANCE), Serializable {
     override fun getName() = "Mago File"
 
     override fun getDescription() = "Mago configuration file"
@@ -16,6 +16,6 @@ class MagoTomlFileType private constructor(): LanguageFileType(TomlLanguage), Se
 
     companion object {
         @JvmStatic
-        val INSTANCE = MagoTomlFileType()
+        val INSTANCE = MagoTextFileType()
     }
 }
