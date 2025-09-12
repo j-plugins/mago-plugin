@@ -49,8 +49,6 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
-        <!--         <tools.projectConfigurableForm instance="com.github.xepozz.mago.MagoConfigurable"/>-->
-        <!--        <tools.quality.phpcs.phpCSConfigurationProvider implementation=""-->
         <tools.quality.type implementation="com.github.xepozz.mago.MagoQualityToolType"/>
         <composerConfigClient implementation="com.github.xepozz.mago.composer.MagoComposerConfig"/>
         <openSettingsProvider implementation="com.github.xepozz.mago.MagoOpenSettingsProvider"/>
