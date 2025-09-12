@@ -39,6 +39,8 @@ class MagoReformatFile : QualityToolReformatFile() {
         val projectPath = project.basePath ?: return emptyList()
         val files = virtualFiles.map { it.path }
 
-        return MagoAnnotatorProxy.getFormatOptions(projectPath, files)
+        val formatOptions = MagoAnnotatorProxy.getFormatOptions(projectPath, files)
+//        println("format options: ${formatOptions.joinToString(" ")}")
+        return formatOptions
     }
 }
