@@ -1,10 +1,10 @@
-package com.github.xepozz.mago
+package com.github.xepozz.mago.config
 
+import com.github.xepozz.mago.config.MagoConfigurationBaseManager.Companion.MAGO
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Pair
 import com.jetbrains.php.PhpBundle
 import com.jetbrains.php.tools.quality.*
-import com.github.xepozz.mago.MagoConfigurationBaseManager.Companion.MAGO
 
 // TODO: change to PhpStanOptionsPanel
 class MagoConfigurableForm(project: Project, configuration: MagoConfiguration) :

@@ -1,5 +1,6 @@
-package com.github.xepozz.mago
+package com.github.xepozz.mago.config
 
+import com.github.xepozz.mago.MagoQualityToolType
 import com.intellij.util.xmlb.XmlSerializer
 import com.jetbrains.php.tools.quality.QualityToolConfigurationBaseManager
 import org.jdom.Element

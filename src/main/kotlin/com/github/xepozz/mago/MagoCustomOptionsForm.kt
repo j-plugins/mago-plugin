@@ -1,17 +1,14 @@
 package com.github.xepozz.mago
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.github.xepozz.mago.config.MagoConfiguration
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Pair
-import com.intellij.ui.LanguageTextField
-import com.intellij.ui.RelativeFont
-import com.intellij.ui.dsl.builder.*
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.php.tools.quality.QualityToolCustomSettings
-import org.intellij.lang.regexp.RegExpLanguage
-import java.awt.Font
 import javax.swing.JComponent
-import kotlin.reflect.KMutableProperty0
 
 class MagoCustomOptionsForm(
     private val project: Project,

@@ -1,10 +1,10 @@
 package com.github.xepozz.mago.composer
 
-import com.github.xepozz.mago.MagoConfiguration
-import com.github.xepozz.mago.MagoConfigurationManager
 import com.github.xepozz.mago.MagoOpenSettingsProvider
 import com.github.xepozz.mago.MagoQualityToolType
 import com.github.xepozz.mago.MagoValidationInspection
+import com.github.xepozz.mago.config.MagoConfiguration
+import com.github.xepozz.mago.config.MagoConfigurationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.jetbrains.php.tools.quality.QualityToolsComposerConfig

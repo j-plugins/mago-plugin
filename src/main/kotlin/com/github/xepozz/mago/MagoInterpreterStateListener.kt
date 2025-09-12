@@ -1,5 +1,6 @@
 package com.github.xepozz.mago
 
+import com.github.xepozz.mago.config.MagoConfigurationManager
 import com.intellij.openapi.project.Project
 import com.jetbrains.php.config.interpreters.PhpInterpretersStateListener
 

@@ -1,4 +1,4 @@
-package com.github.xepozz.mago
+package com.github.xepozz.mago.config
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.extensions.ExtensionPointName

@@ -1,6 +1,12 @@
 package com.github.xepozz.mago
 
-import com.github.xepozz.mago.MagoConfigurationBaseManager.Companion.MAGO
+import com.github.xepozz.mago.config.MagoConfigurable
+import com.github.xepozz.mago.config.MagoConfigurableForm
+import com.github.xepozz.mago.config.MagoConfiguration
+import com.github.xepozz.mago.config.MagoConfigurationBaseManager.Companion.MAGO
+import com.github.xepozz.mago.config.MagoConfigurationManager
+import com.github.xepozz.mago.config.MagoConfigurationProvider
+import com.github.xepozz.mago.config.MagoProjectConfiguration
 import com.intellij.codeInspection.InspectionProfile
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
@@ -16,7 +22,7 @@ class MagoQualityToolType : QualityToolType<MagoConfiguration>() {
 
     override fun getConfigurationManager(project: Project) = MagoConfigurationManager.getInstance(project)
 
-    override fun getInspection() = MagoValidationInspection()
+    public override fun getInspection() = MagoValidationInspection()
 
     override fun getConfigurationProvider() = MagoConfigurationProvider.getInstances()
 
@@ -25,7 +31,7 @@ class MagoQualityToolType : QualityToolType<MagoConfiguration>() {
 
     override fun getToolConfigurable(project: Project): Configurable = MagoConfigurable(project)
 
-    override fun getProjectConfiguration(project: Project) =
+    public override fun getProjectConfiguration(project: Project) =
         MagoProjectConfiguration.getInstance(project)
 
     override fun createConfiguration() = MagoConfiguration()

@@ -1,8 +1,8 @@
 package com.github.xepozz.mago.remote
 
-import com.github.xepozz.mago.MagoConfigurableForm
-import com.github.xepozz.mago.MagoConfiguration
-import com.github.xepozz.mago.MagoConfigurationProvider
+import com.github.xepozz.mago.config.MagoConfigurableForm
+import com.github.xepozz.mago.config.MagoConfiguration
+import com.github.xepozz.mago.config.MagoConfigurationProvider
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer
 import com.jetbrains.php.config.interpreters.PhpInterpreter

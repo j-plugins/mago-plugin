@@ -1,4 +1,4 @@
-package com.github.xepozz.mago
+package com.github.xepozz.mago.config
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.StringUtil

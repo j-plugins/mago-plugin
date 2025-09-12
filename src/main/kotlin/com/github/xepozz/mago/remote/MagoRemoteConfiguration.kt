@@ -1,6 +1,6 @@
 package com.github.xepozz.mago.remote
 
-import com.github.xepozz.mago.MagoConfiguration
+import com.github.xepozz.mago.config.MagoConfiguration
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.xmlb.annotations.Attribute

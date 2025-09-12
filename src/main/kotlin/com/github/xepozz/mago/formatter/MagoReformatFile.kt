@@ -1,9 +1,9 @@
 package com.github.xepozz.mago.formatter
 
 import com.github.xepozz.mago.MagoAnnotatorProxy
-import com.github.xepozz.mago.MagoProjectConfiguration
-import com.github.xepozz.mago.MagoQualityToolType
 import com.github.xepozz.mago.MagoBundle
+import com.github.xepozz.mago.MagoQualityToolType
+import com.github.xepozz.mago.config.MagoProjectConfiguration
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.php.config.commandLine.PhpCommandSettings
