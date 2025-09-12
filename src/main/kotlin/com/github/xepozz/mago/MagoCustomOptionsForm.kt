@@ -8,7 +8,6 @@ import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.php.tools.quality.QualityToolCustomSettings
-import javax.swing.JComponent
 
 class MagoCustomOptionsForm(
     private val project: Project,
@@ -23,22 +22,15 @@ class MagoCustomOptionsForm(
     private lateinit var panel: DialogPanel
     private val model = Model()
 
-    override fun createComponent(): JComponent {
-        panel = panel {
-            row("Other parameters:") {
-                expandableTextField()
-                    .align(AlignX.FILL)
-                    .bindText(model::customParameters)
-            }
+    override fun createComponent() = panel {
+        row("Other parameters:") {
+            expandableTextField()
+                .align(AlignX.FILL)
+                .bindText(model::customParameters)
         }
+    }.also { panel = it }
 
-        return panel
-    }
-
-    override fun isModified(): Boolean {
-        panel.reset()
-        return model.customParameters != configuration.customParameters
-    }
+    override fun isModified() = panel.isModified()
 
     override fun apply() {
         panel.apply()

@@ -14,6 +14,8 @@ import com.jetbrains.php.tools.quality.QualityToolProjectConfiguration
 @State(name = "MagoProjectConfiguration", storages = [Storage(StoragePathMacros.WORKSPACE_FILE)])
 class MagoProjectConfiguration : QualityToolProjectConfiguration<MagoConfiguration>(),
     PersistentStateComponent<MagoProjectConfiguration> {
+    var linterEnabled = true
+    var formatterEnabled = true
 
     override fun getState() = this
 

@@ -59,14 +59,14 @@ class MagoConfigurable(val project: Project) : Configurable {
                 row {
                     cell(OnOffButton())
                         .label("Linter")
-                        .bindSelected({ false }, {})
+                        .bindSelected({ settings.linterEnabled }, { settings.linterEnabled = (it) })
                 }.visible(true).enabled(false)
 
                 row {
                     cell(OnOffButton())
                         .label("Formatter")
-                        .bindSelected({ false }, {})
-                }.visible(true).enabled(false)
+                        .bindSelected({ settings.formatterEnabled }, { settings.formatterEnabled = (it) })
+                }
             }
             group("Options") {
                 row {
