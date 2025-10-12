@@ -1,0 +1,30 @@
+package com.github.xepozz.mago.formatter
+
+// https://mago.carthage.software/tools/linter/rules/best-practices#bestpractices-rules
+enum class Directives(val directive: String,val description: String) {
+    `combine-consecutive-issets`("combine-consecutive-issets", "Combine Consecutive Issets"),
+    `final-controller`("final-controller", "Final Controller"),
+    `loop-does-not-iterate`("loop-does-not-iterate", "Loop Does Not Iterate"),
+    `middleware-in-routes`("middleware-in-routes", "Middleware In Routes"),
+    `no-direct-db-query`("no-direct-db-query", "No Direct Database Queries"),
+    `no-ini-set`("no-ini-set", "No ini_set"),
+    `no-sprintf-concat`("no-sprintf-concat", "No Sprintf Concat"),
+    `prefer-anonymous-migration`("prefer-anonymous-migration", "Prefer Anonymous Migration"),
+    `prefer-arrow-function`("prefer-arrow-function", "Prefer Arrow Function"),
+    `prefer-first-class-callable`("prefer-first-class-callable", "Prefer First Class Callable"),
+    `prefer-interface`("prefer-interface", "Prefer Interface"),
+    `prefer-view-array`("prefer-view-array", "Prefer View Array"),
+    `prefer-while-loop`("prefer-while-loop", "Prefer While Loop"),
+    `psl-array-functions`("psl-array-functions", "Psl Array Functions"),
+    `psl-data-structures`("psl-data-structures", "Psl Data Structures"),
+    `psl-datetime`("psl-datetime", "Psl DateTime"),
+    `psl-math-functions`("psl-math-functions", "Psl Math Functions"),
+    `psl-output`("psl-output", "Psl Output"),
+    `psl-randomness-functions`("psl-randomness-functions", "Psl Randomness Functions"),
+    `psl-regex-functions`("psl-regex-functions", "Psl Regex Functions"),
+    `psl-sleep-functions`("psl-sleep-functions", "Psl Sleep Functions"),
+    `psl-string-functions`("psl-string-functions", "Psl String Functions"),
+    `use-compound-assignment`("use-compound-assignment", "Use Compound Assignment"),
+    `use-wp-functions`("use-wp-functions", "Use WordPress API Functions"),
+    `yoda-conditions`("yoda-conditions", "Yoda Conditions"),
+}

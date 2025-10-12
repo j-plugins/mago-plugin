@@ -24,7 +24,9 @@
                 fileNamesCaseInsensitive="mago.toml"
                 order="last"
         />
-        <externalFormatProcessor implementation="com.github.xepozz.mago.formatter.MagoExternalFormatter" order="first" />
+        <externalFormatProcessor
+                implementation="com.github.xepozz.mago.formatter.MagoExternalFormatter"
+                order="first"/>
         <projectConfigurable
                 instance="com.github.xepozz.mago.config.MagoConfigurable"
                 bundle="messages.MagoBundle"
@@ -57,6 +59,9 @@
         <externalAnnotator
                 language="PHP"
                 implementationClass="com.github.xepozz.mago.MagoAnnotatorProxy"/>
+        <completion.contributor
+                language="PHP"
+                implementationClass="com.github.xepozz.mago.completion.PhpDocCompletionContributor"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
