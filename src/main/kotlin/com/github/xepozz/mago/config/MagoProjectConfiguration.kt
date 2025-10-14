@@ -16,6 +16,8 @@ class MagoProjectConfiguration : QualityToolProjectConfiguration<MagoConfigurati
     PersistentStateComponent<MagoProjectConfiguration> {
     var linterEnabled = true
     var formatterEnabled = true
+    var magoExecutable = "vendor/bin/mago"
+    var additionalParameters = ""
 
     override fun getState() = this
 

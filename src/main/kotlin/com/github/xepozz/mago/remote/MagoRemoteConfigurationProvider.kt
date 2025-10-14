@@ -34,7 +34,7 @@ class MagoRemoteConfigurationProvider : MagoConfigurationProvider() {
     override fun createNewInstance(
         project: Project?,
         existingSettings: List<MagoConfiguration>,
-    ): MagoConfiguration? = null
+    ) = MagoRemoteConfiguration()
 
     override fun createConfigurationByInterpreter(interpreter: PhpInterpreter): MagoConfiguration {
         val settings = MagoRemoteConfiguration()

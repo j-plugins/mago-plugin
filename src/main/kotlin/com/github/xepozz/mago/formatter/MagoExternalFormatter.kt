@@ -32,7 +32,7 @@ class MagoExternalFormatter : ExternalFormatProcessor {
             thisLogger().debug("Reformatting file: ${virtualFile.path}")
             ProgressManager.checkCanceled()
 //            println("before: ${source.text}")
-            MagoReformatFile().invoke(source.project, source)
+            MagoReformatFile(source.project).invoke(source.project, source)
             return null
         }
         return null

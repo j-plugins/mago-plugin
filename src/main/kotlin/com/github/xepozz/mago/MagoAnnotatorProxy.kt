@@ -1,5 +1,6 @@
 package com.github.xepozz.mago
 
+import com.github.xepozz.mago.config.MagoProjectConfiguration
 import com.intellij.codeInspection.InspectionProfile
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
@@ -39,8 +40,10 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         project: Project,
     ): List<String> {
         val projectPath = project.basePath ?: return emptyList()
+        val settings = project.getService(MagoProjectConfiguration::class.java)
 
         return getAnalyzeOptions(projectPath, filePath)
+            .plus(settings.additionalParameters.split(" ").filter { it.isNotBlank() })
     }
 
     override fun createAnnotatorInfo(
@@ -55,7 +58,19 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             LOG.warn("isOnTheFly is False")
         }
 
-        return QualityToolAnnotatorInfo(file, tool, inspectionProfile, project, configuration, false)
+        val settings = project.getService(MagoProjectConfiguration::class.java)
+
+        return QualityToolAnnotatorInfo(
+            file,
+            tool,
+            inspectionProfile,
+            project,
+            configuration.interpreterId,
+            settings.magoExecutable,
+            configuration.maxMessagesPerFile,
+            configuration.timeout,
+            false
+        )
     }
 
     override fun getQualityToolType() = MagoQualityToolType.INSTANCE
