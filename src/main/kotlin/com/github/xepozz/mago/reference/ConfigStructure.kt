@@ -13,15 +13,16 @@ object ConfigStructure {
             "use-tabs",
         ),
         "analyzer" to listOf(
-            "find-unused-definitions",
-            "find-unused-expressions",
-            "analyze-dead-code",
-            "check-throws",
-            "allow-possibly-undefined-array-keys",
-            "perform-heuristic-checks",
+            "excludes",
+            "baseline",
+            "ignore",
+            *AnalyzerOptions.OPTIONS.toTypedArray(),
+            *AnalyzerFeatureFlags.FEATURES.toTypedArray(),
         ),
         "linter" to listOf(
-            "integrations"
+            "excludes",
+            "integrations",
+            "baseline",
         ),
         "linter.rules" to listOf(
             "ambiguous-function-call",
@@ -34,9 +35,24 @@ object ConfigStructure {
         "guard.perimeter" to listOf(
             "layering",
         ),
+        "guard.perimeter.layers" to listOf(),
         "guard.perimeter.rules" to listOf(
             "namespace",
             "permit",
+        ),
+        "guard.structural.rules" to listOf(
+            "on",
+            "not-on",
+            "target",
+            "must-be-named",
+            "must-be-final",
+            "must-be-abstract",
+            "must-be-readonly",
+            "must-implement",
+            "must-extend",
+            "must-use-trait",
+            "must-use-attribute",
+            "reason",
         ),
     )
 }

@@ -42,7 +42,9 @@ class MagoTomlReferenceContributor : PsiReferenceContributor() {
                                                         PlatformPatterns.string()
                                                             .oneOf(
                                                                 "[source]",
-                                                                "[guard]"
+                                                                "[guard]",
+                                                                "[excludes]",
+                                                                "[linter]",
                                                             )
                                                     )
                                             )
