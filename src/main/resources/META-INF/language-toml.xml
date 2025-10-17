@@ -13,5 +13,9 @@
                 language="TOML"
                 implementation="com.github.xepozz.mago.reference.MagoTomlReferenceContributor"
         />
+        <completion.contributor
+                language="TOML"
+                implementationClass="com.github.xepozz.mago.reference.ConfigCompletionContributor"
+        />
     </extensions>
 </idea-plugin>

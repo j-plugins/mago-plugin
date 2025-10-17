@@ -38,7 +38,13 @@ class MagoTomlReferenceContributor : PsiReferenceContributor() {
                                         PlatformPatterns.psiElement(TomlTable::class.java)
                                             .withFirstChild(
                                                 PlatformPatterns.psiElement(TomlTableHeader::class.java)
-                                                    .withText("[source]")
+                                                    .withText(
+                                                        PlatformPatterns.string()
+                                                            .oneOf(
+                                                                "[source]",
+                                                                "[guard]"
+                                                            )
+                                                    )
                                             )
                                     )
                             )
