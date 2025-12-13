@@ -54,7 +54,7 @@ class NamespaceReferenceContributor : PsiReferenceContributor() {
                     element: PsiElement,
                     context: ProcessingContext
                 ): Array<PsiReference> {
-                    if (element !is TomlLiteral) return PsiReference.EMPTY_ARRAY
+                    val element = element as TomlLiteral
 
                     return arrayOf(PhpNamespaceReference(element))
                 }

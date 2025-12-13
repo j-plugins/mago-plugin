@@ -1,8 +1,8 @@
 package com.github.xepozz.mago.config.reference
 
 import com.github.xepozz.mago.MagoIcons
+import com.github.xepozz.mago.contents
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiPolyVariantReferenceBase
@@ -15,12 +15,11 @@ class PhpNamespaceReference(
     element: TomlLiteral,
 ) : PsiPolyVariantReferenceBase<PsiElement>(element) {
     override fun multiResolve(p0: Boolean): Array<out ResolveResult> {
+        val element = element as TomlLiteral
+
         val phpIndex = PhpIndexImpl.getInstance(element.project)
-        val text = StringUtil.unquoteString(element.text).replace("\\\\", "\\").let { "\\$it" }
+        val text = element.contents.replace("\\\\", "\\").let { "\\$it" }
         val namespacesByName = phpIndex.getNamespacesByName(text)
-        println("resolve ${text} -> $namespacesByName")
-        val aaaaaaa = namespacesByName.flatMap { it.directories.toList() }
-        println("resolve2 $aaaaaaa")
 
         return namespacesByName
             .map { it }
@@ -30,8 +29,10 @@ class PhpNamespaceReference(
     override fun isSoft() = false
 
     override fun getVariants(): Array<out Any?> {
+        val element = element as TomlLiteral
+
         val phpIndex = PhpIndexImpl.getInstance(element.project)
-        val text = StringUtil.unquoteString(element.text)
+        val text = element.contents
         val substringBefore = text.substringBefore("IntellijIdeaRulezzz ")
         val parentNamespace = buildString {
             append("\\")
@@ -42,9 +43,7 @@ class PhpNamespaceReference(
             append("\\")
         }.replace("\\\\", "\\")
 
-        println("namespaces of ${text}, $parentNamespace:")
         val namespaces = PhpCompletionUtil.getAllChildNamespaceNames(phpIndex, parentNamespace)
-        println("result $namespaces")
 
         return namespaces
             .map { it.replace("\\", "\\\\") }
