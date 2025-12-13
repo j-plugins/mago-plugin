@@ -11,11 +11,11 @@
         />
         <psi.referenceContributor
                 language="TOML"
-                implementation="com.github.xepozz.mago.reference.MagoTomlReferenceContributor"
+                implementation="com.github.xepozz.mago.config.reference.MagoTomlReferenceContributor"
         />
         <completion.contributor
                 language="TOML"
-                implementationClass="com.github.xepozz.mago.reference.ConfigCompletionContributor"
+                implementationClass="com.github.xepozz.mago.config.reference.ConfigCompletionContributor"
         />
     </extensions>
 </idea-plugin>

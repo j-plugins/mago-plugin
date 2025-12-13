@@ -28,7 +28,7 @@
                 implementation="com.github.xepozz.mago.formatter.MagoExternalFormatter"
                 order="first"/>
         <projectConfigurable
-                instance="com.github.xepozz.mago.config.MagoConfigurable"
+                instance="com.github.xepozz.mago.configuration.MagoConfigurable"
                 bundle="messages.MagoBundle"
                 key="configurable.quality.tool.php.mago"
                 id="settings.php.quality.tools.php.mago"
@@ -43,7 +43,7 @@
                 groupName="Quality tools"
                 enabledByDefault="true"
                 level="WEAK WARNING"
-                implementationClass="com.github.xepozz.mago.MagoValidationInspection"
+                implementationClass="com.github.xepozz.mago.qualityTool.MagoValidationInspection"
                 key="inspection.mago.display.name"/>
 
         <globalInspection
@@ -53,38 +53,38 @@
                 groupName="Quality tools"
                 enabledByDefault="true"
                 level="WEAK WARNING"
-                implementationClass="com.github.xepozz.mago.MagoGlobalInspection"
+                implementationClass="com.github.xepozz.mago.qualityTool.MagoGlobalInspection"
                 key="inspection.mago.global.display.name"/>
 
         <externalAnnotator
                 language="PHP"
-                implementationClass="com.github.xepozz.mago.MagoAnnotatorProxy"/>
+                implementationClass="com.github.xepozz.mago.qualityTool.MagoAnnotatorProxy"/>
         <completion.contributor
                 language="PHP"
-                implementationClass="com.github.xepozz.mago.completion.PhpDocCompletionContributor"/>
+                implementationClass="com.github.xepozz.mago.php.completion.PhpDocCompletionContributor"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
         <tools.quality.type
-                implementation="com.github.xepozz.mago.MagoQualityToolType"/>
+                implementation="com.github.xepozz.mago.qualityTool.MagoQualityToolType"/>
         <composerConfigClient
                 implementation="com.github.xepozz.mago.composer.MagoComposerConfig"/>
         <openSettingsProvider
-                implementation="com.github.xepozz.mago.MagoOpenSettingsProvider"/>
+                implementation="com.github.xepozz.mago.composer.MagoOpenSettingsProvider"/>
         <config.interpreters.PhpInterpretersStateListener
-                implementation="com.github.xepozz.mago.MagoInterpreterStateListener"/>
+                implementation="com.github.xepozz.mago.configuration.MagoInterpreterStateListener"/>
     </extensions>
 
     <extensionPoints>
         <extensionPoint
                 dynamic="true"
                 name="magoConfigurationProvider"
-                interface="com.github.xepozz.mago.config.MagoConfigurationProvider"/>
+                interface="com.github.xepozz.mago.configuration.MagoConfigurationProvider"/>
     </extensionPoints>
     <actions>
         <action
-                id="com.github.xepozz.mago.MagoAddToIgnoredAction"
-                class="com.github.xepozz.mago.MagoAddToIgnoredAction">
+                id="com.github.xepozz.mago.qualityTool.MagoAddToIgnoredAction"
+                class="com.github.xepozz.mago.qualityTool.MagoAddToIgnoredAction">
             <add-to-group group-id="PHPQualityToolsAddToIgnoredList" anchor="last"/>
         </action>
     </actions>

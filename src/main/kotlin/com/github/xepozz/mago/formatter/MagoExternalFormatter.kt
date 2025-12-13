@@ -1,6 +1,6 @@
 package com.github.xepozz.mago.formatter
 
-import com.github.xepozz.mago.config.MagoProjectConfiguration
+import com.github.xepozz.mago.configuration.MagoProjectConfiguration
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.TextRange
