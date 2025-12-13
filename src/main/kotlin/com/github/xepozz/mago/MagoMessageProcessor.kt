@@ -35,11 +35,11 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
 
     override fun done() {
 //        println("done: $buffer")
-        val messageHandler = MagoJsonMessageHandler()
-
-        messageHandler.parseJson(buffer.toString())
+        MagoJsonMessageHandler()
+            .parseJson(buffer.toString())
+            .apply { println("parsed: ${this.size}") }
             .filter { it.myFile == this.file.virtualFile.canonicalPath }
-//            .apply { println("problemList: $this") }
+            .apply { println("problemList: ${this.size}") }
             .forEach { problem ->
                 addMessage(
                     QualityToolMessage(
