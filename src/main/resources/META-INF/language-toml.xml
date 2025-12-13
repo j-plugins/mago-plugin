@@ -11,7 +11,11 @@
         />
         <psi.referenceContributor
                 language="TOML"
-                implementation="com.github.xepozz.mago.config.reference.MagoTomlReferenceContributor"
+                implementation="com.github.xepozz.mago.config.reference.FileSetReferenceContributor"
+        />
+        <psi.referenceContributor
+                language="TOML"
+                implementation="com.github.xepozz.mago.config.reference.NamespaceReferenceContributor"
         />
         <completion.contributor
                 language="TOML"
