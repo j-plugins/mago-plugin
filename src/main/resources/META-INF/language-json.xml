@@ -1,0 +1,18 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity
+                implementation="com.github.xepozz.mago.config.TomlSchemaActivator"/>
+<!--        <json.jsonSchemaEnabler implementation=""-->
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij.json">
+        <jsonSchemaEnabler
+                implementation="com.github.xepozz.mago.config.MagoTomlJsonSchemaEnabler"/>
+
+    </extensions>
+    <extensions defaultExtensionNs="JavaScript">
+        <JsonSchema.ProviderFactory
+                implementation="com.github.xepozz.mago.config.MagoTomlJsonSchemaProviderFactory"/>
+
+    </extensions>
+</idea-plugin>
