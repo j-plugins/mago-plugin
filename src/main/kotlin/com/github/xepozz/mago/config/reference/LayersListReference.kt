@@ -1,6 +1,8 @@
 package com.github.xepozz.mago.config.reference
 
 import com.github.xepozz.mago.config.index.MagoLayersIndexUtil
+import com.intellij.codeInsight.completion.DeclarativeInsertHandler
+import com.intellij.codeInsight.completion.SingleInsertionDeclarativeInsertHandler
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.util.text.StringUtil
@@ -28,14 +30,13 @@ class LayersListReference(
 
     override fun getVariants(): Array<out Any?> {
         return arrayOf(
-            Triple("@all", "All layers", AllIcons.Hierarchy.Supertypes),
-            Triple("@layer", "Specific layer", AllIcons.Hierarchy.Subtypes),
+            LookupElementBuilder.create("@all")
+                .withTypeText("All layers", true)
+                .withIcon(AllIcons.Hierarchy.Supertypes),
+            LookupElementBuilder.create("@layer")
+                .withTypeText("Specific layer", true)
+                .withIcon(AllIcons.Hierarchy.Subtypes)
+                .withInsertHandler(SingleInsertionDeclarativeInsertHandler(":", DeclarativeInsertHandler.PopupOptions.MemberLookup)),
         )
-            .map {
-                LookupElementBuilder.create(it.first)
-                    .withIcon(it.third)
-                    .withTypeText(it.second, true)
-            }
-            .toTypedArray()
     }
 }
