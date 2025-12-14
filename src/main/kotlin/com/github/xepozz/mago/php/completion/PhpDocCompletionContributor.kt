@@ -32,7 +32,6 @@ class PhpDocCompletionContributor : CompletionContributor() {
                     val element = parameters.position
                     val parent = element.parent as? PhpPsiElement ?: return
                     val phpdoc = parent.parent as? PhpDocTag ?: return
-                    println("phpdoc.name: ${phpdoc.name} eee")
                     if (!PHPDOCS.contains(phpdoc.name)) return
 
                     if (phpdoc.firstChild == element) return
@@ -52,8 +51,6 @@ class PhpDocCompletionContributor : CompletionContributor() {
 
                     val text = categoryElement.text
                     val category = text.substringBefore(':')
-
-                    println("new category: $category")
 
                     ENTRIES[category]
                         ?.let { directives ->

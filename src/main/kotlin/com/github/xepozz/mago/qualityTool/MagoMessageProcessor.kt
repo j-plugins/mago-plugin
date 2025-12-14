@@ -37,9 +37,7 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
 //        println("done: $buffer")
         MagoJsonMessageHandler()
             .parseJson(buffer.toString())
-            .apply { println("parsed: ${this.size}") }
             .filter { it.myFile == this.file.virtualFile.canonicalPath }
-            .apply { println("problemList: ${this.size}") }
             .forEach { problem ->
                 addMessage(
                     QualityToolMessage(

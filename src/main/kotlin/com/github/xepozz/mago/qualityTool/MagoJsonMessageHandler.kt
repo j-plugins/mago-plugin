@@ -44,7 +44,6 @@ class MagoJsonMessageHandler {
                     }
             }
             .flatten()
-            .apply { println("problems: $this") }
     }
 
     fun levelToSeverity(level: String?) = when (level) {

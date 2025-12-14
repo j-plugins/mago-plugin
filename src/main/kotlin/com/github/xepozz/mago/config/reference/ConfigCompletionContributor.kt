@@ -67,15 +67,11 @@ class ConfigCompletionContributor : CompletionContributor() {
                     results: CompletionResultSet
                 ) {
                     val element = parameters.position.parent as? TomlKeySegment ?: return
-                    println("element: $element")
                     val table = element.findParentOfType<TomlHeaderOwner>() ?: return
-                    println("table: $table")
                     val key = table.header.key?.text ?: return
 
-                    println("key: $key")
                     ConfigStructure
-                        .STRUCTURE
-                        .get(key)
+                        .STRUCTURE[key]
                         ?.map {
                             LookupElementBuilder.create(it)
                                 .withIcon(MagoIcons.MAGO)
