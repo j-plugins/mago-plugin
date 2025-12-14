@@ -22,6 +22,10 @@
         />
         <psi.referenceContributor
                 language="TOML"
+                implementation="com.github.xepozz.mago.config.reference.WildcardNamespaceReferenceContributor"
+        />
+        <psi.referenceContributor
+                language="TOML"
                 implementation="com.github.xepozz.mago.config.reference.LayersReferenceContributor"
         />
         <completion.contributor

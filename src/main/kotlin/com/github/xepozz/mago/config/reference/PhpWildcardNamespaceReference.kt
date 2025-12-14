@@ -11,25 +11,27 @@ import com.jetbrains.php.PhpIndexImpl
 import com.jetbrains.php.completion.PhpCompletionUtil
 import org.toml.lang.psi.TomlLiteral
 
-class PhpNamespaceReference(
+class PhpWildcardNamespaceReference(
     element: TomlLiteral,
 ) : PsiPolyVariantReferenceBase<PsiElement>(element) {
     override fun multiResolve(p0: Boolean): Array<out ResolveResult> {
         val element = element as TomlLiteral
 
+        if (element.contents.startsWith('@')) return PsiElementResolveResult.EMPTY_ARRAY
+
         val phpIndex = PhpIndexImpl.getInstance(element.project)
-        val text = element.contents.replace("\\\\", "\\").let { "\\$it" }
+        val text = element.contents.replace("\\\\", "\\").trimEnd('*', '\\').let { "\\$it" }
         val namespacesByName = phpIndex.getNamespacesByName(text)
 
         return namespacesByName
-            .map { it }
             .let { PsiElementResolveResult.createResults(it) }
     }
 
     override fun isSoft() = false
 
-    override fun getVariants(): Array<out Any?> {
+    override fun getVariants(): Array<out Any> {
         val element = element as TomlLiteral
+        if (element.contents.startsWith('@')) return emptyArray()
 
         val phpIndex = PhpIndexImpl.getInstance(element.project)
         val text = element.contents
