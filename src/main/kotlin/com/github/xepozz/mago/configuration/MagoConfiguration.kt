@@ -20,10 +20,10 @@ open class MagoConfiguration : QualityToolConfiguration() {
         if (other !is MagoConfiguration) {
             return 1
         }
-        if (this.getPresentableName(null) == PhpBundle.message("local")) {
+        if (this.getPresentableName(null) == PhpBundle.message("label.system.php")) {
             return -1
         }
-        if (other.getPresentableName(null) == PhpBundle.message("local")) {
+        if (other.getPresentableName(null) == PhpBundle.message("label.system.php")) {
             return 1
         }
 
@@ -63,9 +63,7 @@ open class MagoConfiguration : QualityToolConfiguration() {
     override fun getMaxMessagesPerFile(): Int = myMaxMessagesPerFile
 
     override fun clone(): QualityToolConfiguration {
-        val settings = MagoConfiguration()
-        clone(settings)
-        return settings
+        return clone(MagoConfiguration())
     }
 
     fun clone(settings: MagoConfiguration): MagoConfiguration {

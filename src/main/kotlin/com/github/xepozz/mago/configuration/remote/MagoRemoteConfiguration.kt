@@ -41,9 +41,7 @@ class MagoRemoteConfiguration : MagoConfiguration(), PhpSdkDependentConfiguratio
             it.myInterpreterId = this.myInterpreterId
         }
 
-        super.clone(settings)
-
-        return settings
+        return super.clone(settings)
     }
 
     override fun serialize(path: String?): String? = path
