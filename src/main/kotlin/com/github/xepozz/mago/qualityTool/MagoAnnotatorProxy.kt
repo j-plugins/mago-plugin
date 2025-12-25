@@ -59,15 +59,13 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             LOG.warn("isOnTheFly is False")
         }
 
-        val settings = project.getService(MagoProjectConfiguration::class.java)
-
         return QualityToolAnnotatorInfo(
             file,
             tool,
             inspectionProfile,
             project,
             configuration.interpreterId,
-            settings.magoExecutable,
+            configuration.toolPath,
             configuration.maxMessagesPerFile,
             configuration.timeout,
             false

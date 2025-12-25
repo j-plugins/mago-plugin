@@ -21,6 +21,6 @@ open class MagoConfigurationBaseManager : QualityToolConfigurationBaseManager<Ma
     companion object {
         const val MAGO = "Mago"
         const val MAGO_PATH = "MagoPath"
-        const val MAGO_ROOT_NAME = "Mago_settings"
+        const val MAGO_ROOT_NAME = "MagoSettings"
     }
 }

@@ -37,10 +37,7 @@ class MagoReformatFile(val project: Project) : QualityToolReformatFile() {
 
     override fun getName() = MagoBundle.message("quality.tool.mago")
 
-    override fun getToolPath(settings: QualityToolConfiguration?): String? {
-//        val settings = settings as? MagoConfiguration ?: return null
-        return this.settings.magoExecutable
-    }
+    override fun getToolPath(settings: QualityToolConfiguration?) = settings?.toolPath
 
     override fun getOptions(project: Project, virtualFiles: Array<VirtualFile>): List<String> {
         val projectPath = project.basePath ?: return emptyList()

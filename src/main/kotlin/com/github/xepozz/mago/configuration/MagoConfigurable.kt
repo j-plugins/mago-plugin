@@ -3,7 +3,6 @@ package com.github.xepozz.mago.configuration
 import com.github.xepozz.mago.MagoBundle
 import com.github.xepozz.mago.qualityTool.MagoQualityToolType
 import com.intellij.codeInsight.daemon.HighlightDisplayKey
-import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil
 import com.intellij.openapi.project.Project
@@ -17,11 +16,14 @@ import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.php.lang.inspections.PhpInspectionsUtil
+import com.jetbrains.php.tools.quality.QualityToolConfigurationComboBox
+import javax.swing.JComponent
 
 class MagoConfigurable(val project: Project) : Configurable {
     val settings = project.getService(MagoProjectConfiguration::class.java)
     val inspectionProfileManager = InspectionProfileManager.getInstance(project)
 
+    val qualityToolConfigurationComboBox = QualityToolConfigurationComboBox(project, getQualityToolType())
     var myPanel = panel {
         group("Features") {
             row {
@@ -60,9 +62,8 @@ class MagoConfigurable(val project: Project) : Configurable {
         }
         group("Options") {
             row {
-                label("Path to Mago executable")
-                textFieldWithBrowseButton(FileChooserDescriptor(true, false, false, false, false, false))
-                    .bindText(settings::magoExecutable)
+                cell(qualityToolConfigurationComboBox)
+                    .label("Mago executable")
                     .align(AlignX.FILL)
             }.layout(RowLayout.PARENT_GRID)
             row {
@@ -78,24 +79,38 @@ class MagoConfigurable(val project: Project) : Configurable {
         }
     }
 
-    override fun getDisplayName() = "Mago"
+    override fun createComponent(): JComponent = myPanel
 
-    override fun getHelpTopic() = "reference.settings.php.mago"
-
-    fun getQualityToolType() = MagoQualityToolType.INSTANCE
-
-    fun getInspectionShortName() = getQualityToolType().getInspectionShortName(project)
-
-    override fun createComponent() = myPanel
-
-    override fun isModified() = this.myPanel.isModified()
+    override fun isModified(): Boolean {
+        return myPanel.isModified()
+                || qualityToolConfigurationComboBox.selectedItemId != getSavedSelectedConfigurationId()
+    }
 
     override fun apply() {
+        updateSelectedConfiguration(qualityToolConfigurationComboBox.selectedItemId)
         myPanel.apply()
     }
 
+    private fun getQualityToolType() = MagoQualityToolType.INSTANCE
+
     override fun reset() {
-        myPanel.reset()
+        qualityToolConfigurationComboBox.reset(project, getSavedSelectedConfigurationId())
     }
+
+    private fun getInspectionShortName() = getQualityToolType().getInspectionShortName(project)
+
+    override fun getDisplayName() = getQualityToolType().getDisplayName()
+
+    private fun updateSelectedConfiguration(newConfigurationId: String?) {
+        val projectConfiguration = getQualityToolType().getProjectConfiguration(project)
+        if (newConfigurationId != projectConfiguration.selectedConfigurationId) {
+            projectConfiguration.selectedConfigurationId = newConfigurationId
+        }
+    }
+
+    private fun getSavedSelectedConfigurationId(): String? {
+        return getQualityToolType().getProjectConfiguration(project).selectedConfigurationId
+    }
+
 }
 

@@ -2,49 +2,39 @@ package com.github.xepozz.mago.qualityTool
 
 import com.github.xepozz.mago.configuration.MagoConfiguration
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Pair
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.php.tools.quality.QualityToolCustomSettings
 
+// a bit useless, but still
 class MagoCustomOptionsForm(
     private val project: Project,
     private val configuration: MagoConfiguration,
 ) : QualityToolCustomSettings() {
-
-    // TODO: maybe use MagoConfiguration?
-    data class Model(
-        var customParameters: String = "",
-    )
-
-    private lateinit var panel: DialogPanel
-    private val model = Model()
-
-    override fun createComponent() = panel {
+    private var myPanel = panel {
         row("Other parameters:") {
             expandableTextField()
+                .enabled(false)
                 .align(AlignX.FILL)
-                .bindText(model::customParameters)
+                .bindText(configuration::customParameters)
         }
-    }.also { panel = it }
+    }
 
-    override fun isModified() = panel.isModified()
+    override fun createComponent() = myPanel
+
+    override fun isModified() = myPanel.isModified()
 
     override fun apply() {
-        panel.apply()
-
-        configuration.customParameters = model.customParameters
+        myPanel.apply()
     }
 
     override fun reset() {
-        model.customParameters = configuration.customParameters
-
-        panel.reset()
+        myPanel.reset()
     }
 
     override fun getDisplayName() = null
 
-    override fun validate() = Pair.create(false, "")
+    override fun validate() = Pair.create(true, "")
 }
