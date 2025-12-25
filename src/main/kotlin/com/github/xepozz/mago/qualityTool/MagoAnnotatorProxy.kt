@@ -22,7 +22,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             add("fmt")
             addAll(files)
         }
-//            .apply { println("format options: ${this.joinToString(" ")}") }
+            .apply { println("format options: ${this.joinToString(" ")}") }
 
         fun getAnalyzeOptions(projectPath: String, filePath: String?) = buildList {
             add("--workspace=$projectPath")
@@ -58,6 +58,8 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         if (!isOnTheFly) {
             LOG.warn("isOnTheFly is False")
         }
+
+        println("tool path: ${configuration.toolPath}")
 
         return QualityToolAnnotatorInfo(
             file,
