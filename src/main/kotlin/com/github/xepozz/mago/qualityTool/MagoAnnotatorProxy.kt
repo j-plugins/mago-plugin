@@ -2,6 +2,7 @@ package com.github.xepozz.mago.qualityTool
 
 import com.github.xepozz.mago.configuration.MagoProjectConfiguration
 import com.intellij.codeInspection.InspectionProfile
+import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
@@ -43,7 +44,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         val settings = project.getService(MagoProjectConfiguration::class.java)
 
         return getAnalyzeOptions(projectPath, filePath)
-            .plus(settings.additionalParameters.split(" ").filter { it.isNotBlank() })
+            .plus(ParametersList.parse(settings.additionalParameters))
     }
 
     override fun createAnnotatorInfo(

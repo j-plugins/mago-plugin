@@ -12,11 +12,11 @@ class MagoComposerConfig : QualityToolsComposerConfig<MagoConfiguration, MagoVal
     PACKAGE,
     RELATIVE_PATH
 ) {
-    override fun getQualityInspectionShortName() = MagoQualityToolType.Companion.INSTANCE.inspectionId
+    override fun getQualityInspectionShortName() = MagoQualityToolType.INSTANCE.inspectionId
 
-    override fun getConfigurationManager(project: Project) = MagoConfigurationManager.Companion.getInstance(project)
+    override fun getConfigurationManager(project: Project) = MagoConfigurationManager.getInstance(project)
 
-    override fun getSettings() = MagoOpenSettingsProvider.Companion.INSTANCE
+    override fun getSettings() = MagoOpenSettingsProvider.INSTANCE
 
     companion object {
         private const val PACKAGE: String = "carthage-software/mago"
