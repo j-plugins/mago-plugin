@@ -1,6 +1,7 @@
 package com.github.xepozz.mago.qualityTool
 
 import com.google.gson.JsonParser
+import com.intellij.openapi.util.io.FileUtil
 import com.jetbrains.php.tools.quality.QualityToolMessage
 
 class MagoJsonMessageHandler {
@@ -24,7 +25,8 @@ class MagoJsonMessageHandler {
                                 span.get("start").asJsonObject.get("offset").asInt,
                                 span.get("end").asJsonObject.get("offset").asInt,
                                 "Mago: ${issue.get("message").asString.trimEnd('.')} [${issue.get("code").asString}]",
-                                span.get("file_id").asJsonObject.get("path").asString,
+                                span.get("file_id").asJsonObject.get("path").asString
+                                    .let { FileUtil.toCanonicalPath(it) ?: "" },
                                 issue.get("code").asString,
                                 issue.get("help").asString,
                                 issue.get("notes").asJsonArray.map { it.asString },
