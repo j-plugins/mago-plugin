@@ -1,6 +1,6 @@
 package com.github.xepozz.mago.config
 
-import com.github.xepozz.mago.composer.MagoComposerConfig
+import com.github.xepozz.mago.configuration.MagoProjectConfiguration
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessAdapter
 import com.intellij.execution.process.OSProcessHandler
@@ -9,7 +9,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
-import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
@@ -26,11 +25,14 @@ class MagoSchemaHolder(val project: Project) {
         // don't run dump several times
         if (run) return
         run = true
-        val projectDir = project.guessProjectDir() ?: return
 
+        val magoConfiguration = MagoProjectConfiguration
+            .getInstance(project)
+            .findSelectedConfiguration(project)
+            ?: return
 
         ApplicationManager.getApplication().executeOnPooledThread {
-            val magoExecutable = MagoComposerConfig().getExecutablePath(projectDir.path + "/vendor")
+            val magoExecutable = magoConfiguration.toolPath
 
             val command = GeneralCommandLine().apply {
                 exePath = magoExecutable
