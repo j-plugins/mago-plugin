@@ -3,6 +3,7 @@ package com.github.xepozz.mago.configuration
 import com.github.xepozz.mago.MagoBundle
 import com.github.xepozz.mago.qualityTool.MagoQualityToolType
 import com.intellij.codeInsight.daemon.HighlightDisplayKey
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil
 import com.intellij.openapi.project.Project
@@ -25,7 +26,12 @@ class MagoConfigurable(val project: Project) : Configurable {
 
     val qualityToolConfigurationComboBox = QualityToolConfigurationComboBox(project, getQualityToolType())
     var myPanel = panel {
-        group("Features") {
+        row {
+            browserLink("Download Mago", "https://github.com/carthage-software/mago")
+            browserLink("Report a plugin bug", "https://github.com/j-plugins/mago-plugin/issues")
+            browserLink("Request a plugin feature", "https://github.com/j-plugins/mago-plugin/issues")
+        }
+        group(MagoBundle.message("settings.inspections.title")) {
             row {
                 cell(
                     PhpInspectionsUtil.createPanelWithSettingsLink(
@@ -37,7 +43,8 @@ class MagoConfigurable(val project: Project) : Configurable {
                                 ErrorsConfigurableProvider::class.java
                             ) as ErrorsConfigurable?
                         },
-                        { it.selectInspectionTool(getInspectionShortName()) })
+                        { it.selectInspectionTool(getInspectionShortName()) },
+                    )
                 )
                 cell(OnOffButton())
                     .bindSelected({
@@ -47,35 +54,61 @@ class MagoConfigurable(val project: Project) : Configurable {
                         inspectionProfileManager.currentProfile
                             .setToolEnabled(getInspectionShortName(), it)
                     })
-            }
+            }.layout(RowLayout.PARENT_GRID)
             row {
-                cell(OnOffButton())
-                    .label("Linter")
-                    .bindSelected(settings::linterEnabled)
-            }.visible(true).enabled(false)
-
-            row {
-                cell(OnOffButton())
-                    .label("Formatter")
-                    .bindSelected(settings::formatterEnabled)
-            }
+                textField()
+                    .label("Additional parameters")
+                    .bindText(settings::analyzeAdditionalParameters)
+                    .comment("Read more: mago analyze --help")
+                    .align(AlignX.FILL)
+            }.layout(RowLayout.PARENT_GRID)
         }
-        group("Options") {
+        group(MagoBundle.message("settings.linter.title")) {
+            row {
+                cell(OnOffButton())
+                    .label(MagoBundle.message("settings.enabled"))
+                    .bindSelected(settings::linterEnabled)
+            }
+                .layout(RowLayout.PARENT_GRID)
+                .visible(true)
+                .enabled(false)
+        }
+        group(MagoBundle.message("settings.guard.title")) {
+            row {
+                cell(OnOffButton())
+                    .label(MagoBundle.message("settings.enabled"))
+                    .bindSelected(settings::guardEnabled)
+            }
+                .layout(RowLayout.PARENT_GRID)
+                .visible(true)
+                .enabled(false)
+        }
+        group(MagoBundle.message("settings.formatter.title")) {
+            row {
+                cell(OnOffButton())
+                    .label(MagoBundle.message("settings.enabled"))
+                    .bindSelected(settings::formatterEnabled)
+            }.layout(RowLayout.PARENT_GRID)
+            row {
+                textField()
+                    .label("Additional parameters")
+                    .bindText(settings::formatAdditionalParameters)
+                    .comment("Read more: mago fmt --help")
+                    .align(AlignX.FILL)
+            }.layout(RowLayout.PARENT_GRID)
+        }
+        group(MagoBundle.message("settings.options.title")) {
             row {
                 cell(qualityToolConfigurationComboBox)
                     .label("Mago executable")
                     .align(AlignX.FILL)
             }.layout(RowLayout.PARENT_GRID)
             row {
-                label("Additional parameters")
-                textField()
-                    .bindText(settings::additionalParameters)
+                textFieldWithBrowseButton(FileChooserDescriptorFactory.singleFile())
+                    .bindText(settings::configurationFile)
+                    .label("Configuration file")
                     .align(AlignX.FILL)
             }.layout(RowLayout.PARENT_GRID)
-
-            row {
-                browserLink("Download Mago", "https://github.com/carthage-software/mago")
-            }
         }
     }
 

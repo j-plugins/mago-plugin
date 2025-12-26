@@ -40,11 +40,9 @@ class MagoReformatFile(val project: Project) : QualityToolReformatFile() {
     override fun getToolPath(settings: QualityToolConfiguration?) = settings?.toolPath
 
     override fun getOptions(project: Project, virtualFiles: Array<VirtualFile>): List<String> {
-        val projectPath = project.basePath ?: return emptyList()
         val files = virtualFiles.map { it.path }
+        val settings = project.getService(MagoProjectConfiguration::class.java)
 
-        val formatOptions = MagoAnnotatorProxy.getFormatOptions(projectPath, files)
-//        println("format options: ${formatOptions.joinToString(" ")}")
-        return formatOptions
+        return MagoAnnotatorProxy.getFormatOptions(settings, project, files)
     }
 }

@@ -1,7 +1,6 @@
 package com.github.xepozz.mago.qualityTool
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.util.TextRange
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolExecutionException
@@ -39,13 +38,13 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
 //        println("done: $buffer")
         MagoJsonMessageHandler()
             .parseJson(buffer.toString())
-            .apply {
-                thisLogger<MagoMessageProcessor>().error("files: ${map { it.file }}, current: ${file.virtualFile.canonicalPath}")
-            }
+//            .apply {
+//                thisLogger<MagoMessageProcessor>().info("files: ${map { it.file }}, current: ${file.virtualFile.canonicalPath}")
+//            }
             .filter {
                 val currentFilePath = file.virtualFile.canonicalPath ?: return@filter false
 
-                thisLogger<MagoMessageProcessor>().error("compare ${it.file} ends with $currentFilePath")
+//                thisLogger<MagoMessageProcessor>().info("compare ${it.file} ends with $currentFilePath")
                 it.file.endsWith(currentFilePath)
             }
             .map { problem ->

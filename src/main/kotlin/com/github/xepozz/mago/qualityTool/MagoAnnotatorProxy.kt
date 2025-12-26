@@ -6,6 +6,7 @@ import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import com.jetbrains.php.composer.ComposerDetectionManager
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolConfiguration
@@ -16,22 +17,41 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
         val INSTANCE = MagoAnnotatorProxy()
 
-        fun getFormatOptions(projectPath: String, files: Collection<String>) = buildList {
-            add("--workspace=$projectPath")
+        fun getFormatOptions(settings: MagoProjectConfiguration, project: Project, files: Collection<String>) =
+            buildList {
+                addWorkspace(project)
+                addConfig(settings)
 
-            add("fmt")
-            addAll(files)
-        }
-            .apply { println("format options: ${this.joinToString(" ")}") }
+                add("fmt")
+                addAll(files)
+            }
+                .plus(ParametersList.parse(settings.formatAdditionalParameters))
+                .apply { println("format options: ${this.joinToString(" ")}") }
 
-        fun getAnalyzeOptions(projectPath: String, filePath: String?) = buildList {
-            add("--workspace=$projectPath")
+        fun getAnalyzeOptions(settings: MagoProjectConfiguration, project: Project, filePath: String?) = buildList {
+            addWorkspace(project)
+            addConfig(settings)
 
             add("analyze")
             add("--reporting-format=json")
 //            filePath?.let { add(it) }
         }
-//            .apply { println("analyze options: ${this.joinToString(" ")}") }
+            .plus(ParametersList.parse(settings.analyzeAdditionalParameters))
+            .apply { println("analyze options: ${this.joinToString(" ")}") }
+
+        private fun MutableList<String>.addWorkspace(project: Project) {
+            val configs = ComposerDetectionManager.detectComposer(project)
+            println("configs: $configs")
+            val projectPath = configs?.main ?: project.basePath ?: return
+
+            add("--workspace=$projectPath")
+        }
+
+        private fun MutableList<String>.addConfig(settings: MagoProjectConfiguration) {
+            if (settings.configurationFile.isNotEmpty()) {
+                add("--config=${settings.configurationFile}")
+            }
+        }
     }
 
     override fun getOptions(
@@ -40,11 +60,9 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         profile: InspectionProfile?,
         project: Project,
     ): List<String> {
-        val projectPath = project.basePath ?: return emptyList()
         val settings = project.getService(MagoProjectConfiguration::class.java)
 
-        return getAnalyzeOptions(projectPath, filePath)
-            .plus(ParametersList.parse(settings.additionalParameters))
+        return getAnalyzeOptions(settings, project, filePath)
     }
 
     override fun createAnnotatorInfo(
