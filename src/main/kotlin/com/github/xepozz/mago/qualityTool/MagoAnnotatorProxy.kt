@@ -6,7 +6,6 @@ import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import com.jetbrains.php.composer.ComposerDetectionManager
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolConfiguration
@@ -40,10 +39,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             .apply { println("analyze options: ${this.joinToString(" ")}") }
 
         private fun MutableList<String>.addWorkspace(project: Project) {
-            val configs = ComposerDetectionManager.detectComposer(project)
-            println("configs: $configs")
-            val projectPath = configs?.main ?: project.basePath ?: return
-
+            val projectPath = project.basePath ?: return
             add("--workspace=$projectPath")
         }
 
