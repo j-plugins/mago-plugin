@@ -5,6 +5,7 @@ import com.github.xepozz.mago.configuration.MagoConfigurationManager
 import com.github.xepozz.mago.qualityTool.MagoQualityToolType
 import com.github.xepozz.mago.qualityTool.MagoValidationInspection
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.SystemInfo
 import com.jetbrains.php.tools.quality.QualityToolsComposerConfig
 
 class MagoComposerConfig : QualityToolsComposerConfig<MagoConfiguration, MagoValidationInspection>(
@@ -19,6 +20,6 @@ class MagoComposerConfig : QualityToolsComposerConfig<MagoConfiguration, MagoVal
 
     companion object {
         private const val PACKAGE: String = "carthage-software/mago"
-        private val RELATIVE_PATH: String = "bin/mago"
+        private val RELATIVE_PATH: String = "bin/mago${if (SystemInfo.isWindows) ".bat" else ""}"
     }
 }
