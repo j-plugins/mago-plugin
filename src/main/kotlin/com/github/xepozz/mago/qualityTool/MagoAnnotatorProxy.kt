@@ -5,10 +5,8 @@ import com.intellij.codeInspection.InspectionProfile
 import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFile
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
-import com.jetbrains.php.tools.quality.QualityToolConfiguration
 
 open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>() {
     companion object {
@@ -27,11 +25,12 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
                 .plus(ParametersList.parse(settings.formatAdditionalParameters))
                 .apply { println("format options: ${this.joinToString(" ")}") }
 
-        fun getAnalyzeOptions(settings: MagoProjectConfiguration, project: Project, filePath: String?) = buildList {
+        fun getAnalyzeOptions(settings: MagoProjectConfiguration, project: Project, filePath: String) = buildList {
             addWorkspace(project)
             addConfig(settings)
 
             add("analyze")
+            add(filePath)
             add("--reporting-format=json")
 //            filePath?.let { add(it) }
         }
@@ -56,36 +55,10 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         profile: InspectionProfile?,
         project: Project,
     ): List<String> {
+        checkNotNull(filePath)
         val settings = project.getService(MagoProjectConfiguration::class.java)
 
         return getAnalyzeOptions(settings, project, filePath)
-    }
-
-    override fun createAnnotatorInfo(
-        file: PsiFile?,
-        tool: MagoValidationInspection,
-        inspectionProfile: InspectionProfile,
-        project: Project,
-        configuration: QualityToolConfiguration,
-        isOnTheFly: Boolean,
-    ): QualityToolAnnotatorInfo<MagoValidationInspection> {
-        if (!isOnTheFly) {
-            LOG.warn("isOnTheFly is False")
-        }
-
-        println("tool path: ${configuration.toolPath}")
-
-        return QualityToolAnnotatorInfo(
-            file,
-            tool,
-            inspectionProfile,
-            project,
-            configuration.interpreterId,
-            configuration.toolPath,
-            configuration.maxMessagesPerFile,
-            configuration.timeout,
-            false
-        )
     }
 
     override fun getQualityToolType() = MagoQualityToolType.INSTANCE
@@ -95,5 +68,5 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
     override fun getPairedBatchInspectionShortName() = qualityToolType.inspectionId
 
-    override fun runOnTempFiles() = false
+    override fun runOnTempFiles() = true
 }

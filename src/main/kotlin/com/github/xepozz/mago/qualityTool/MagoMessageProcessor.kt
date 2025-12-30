@@ -41,12 +41,12 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
 //            .apply {
 //                thisLogger<MagoMessageProcessor>().info("files: ${map { it.file }}, current: ${file.virtualFile.canonicalPath}")
 //            }
-            .filter {
-                val currentFilePath = file.virtualFile.canonicalPath ?: return@filter false
-
+//            .filter {
+//                val currentFilePath = file.virtualFile.canonicalPath ?: return@filter false
+//
 //                thisLogger<MagoMessageProcessor>().info("compare ${it.file} ends with $currentFilePath")
-                it.file.endsWith(currentFilePath)
-            }
+//                it.file.endsWith(currentFilePath)
+//            }
             .map { problem ->
                 QualityToolMessage(
                     this,

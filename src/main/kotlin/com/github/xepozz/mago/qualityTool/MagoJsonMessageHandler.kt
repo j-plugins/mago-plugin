@@ -6,7 +6,7 @@ import com.jetbrains.php.tools.quality.QualityToolMessage
 
 class MagoJsonMessageHandler {
     fun parseJson(line: String): List<MagoProblemDescription> {
-        println("JSON: $line")
+//        println("JSON: $line")
         return JsonParser.parseString(line)
             .apply { if (this == null || this.isJsonNull) return emptyList() }
             .asJsonObject.get("issues")
