@@ -48,9 +48,16 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
 //                it.file.endsWith(currentFilePath)
 //            }
             .map { problem ->
+                /**
+                 * temporary convert to bytes-offset to chars offset
+                 */
+                val range = byteRangeToCharRange(file.text, problem.startChar, problem.endChar)
+                val textRange = TextRange(range.first, range.last + 1)
+//                val textRange = TextRange(problem.startChar, problem.endChar)
+
                 QualityToolMessage(
                     this,
-                    TextRange(problem.startChar, problem.endChar),
+                    textRange,
                     problem.severity,
                     problem.message,
                     MagoReformatFileAction(info.project),
@@ -63,5 +70,12 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
                 }
             }
             .forEach { addMessage(it) }
+    }
+
+    private fun byteRangeToCharRange(text: String, byteStart: Int, byteEnd: Int): IntRange {
+        val bytes = text.toByteArray(Charsets.UTF_8)
+        val charStart = String(bytes.copyOf(byteStart), Charsets.UTF_8).length
+        val charEnd = String(bytes.copyOf(byteEnd), Charsets.UTF_8).length
+        return charStart until charEnd
     }
 }
