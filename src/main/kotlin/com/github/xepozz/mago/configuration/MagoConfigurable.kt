@@ -31,6 +31,19 @@ class MagoConfigurable(val project: Project) : Configurable {
             browserLink("Report a plugin bug", "https://github.com/j-plugins/mago-plugin/issues")
             browserLink("Request a plugin feature", "https://github.com/j-plugins/mago-plugin/issues")
         }
+        group(MagoBundle.message("settings.options.title")) {
+            row {
+                cell(qualityToolConfigurationComboBox)
+                    .label("Mago executable")
+                    .align(AlignX.FILL)
+            }.layout(RowLayout.PARENT_GRID)
+            row {
+                textFieldWithBrowseButton(FileChooserDescriptorFactory.singleFile())
+                    .bindText(settings::configurationFile)
+                    .label("Configuration file")
+                    .align(AlignX.FILL)
+            }.layout(RowLayout.PARENT_GRID)
+        }
         group(MagoBundle.message("settings.inspections.title")) {
             row {
                 cell(
@@ -94,19 +107,6 @@ class MagoConfigurable(val project: Project) : Configurable {
                     .label("Additional parameters")
                     .bindText(settings::formatAdditionalParameters)
                     .comment("Read more: mago fmt --help")
-                    .align(AlignX.FILL)
-            }.layout(RowLayout.PARENT_GRID)
-        }
-        group(MagoBundle.message("settings.options.title")) {
-            row {
-                cell(qualityToolConfigurationComboBox)
-                    .label("Mago executable")
-                    .align(AlignX.FILL)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                textFieldWithBrowseButton(FileChooserDescriptorFactory.singleFile())
-                    .bindText(settings::configurationFile)
-                    .label("Configuration file")
                     .align(AlignX.FILL)
             }.layout(RowLayout.PARENT_GRID)
         }
