@@ -18,7 +18,7 @@ class MagoConfigurationManager(project: Project?) :
     }
 
     @Service(Service.Level.PROJECT)
-    @State(name = "Mago", storages = [Storage("php-tools.xml")])
+    @State(name = "Mago", storages = [Storage("php.xml")])
     internal class MagoProjectConfigurationManager : MagoConfigurationBaseManager()
 
     @Service(Service.Level.APP)

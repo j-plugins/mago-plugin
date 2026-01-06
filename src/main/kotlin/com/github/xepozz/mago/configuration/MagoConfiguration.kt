@@ -34,6 +34,7 @@ open class MagoConfiguration : QualityToolConfiguration() {
 
     override fun getPresentableName(project: Project?): String = id
 
+    @Attribute("interpreter_id")
     override fun getInterpreterId(): String? = null
 
     @Attribute("timeout")
@@ -62,15 +63,15 @@ open class MagoConfiguration : QualityToolConfiguration() {
     @Attribute("max_messages_per_file")
     override fun getMaxMessagesPerFile(): Int = myMaxMessagesPerFile
 
-    override fun clone(): QualityToolConfiguration {
-        return clone(MagoConfiguration())
-    }
+    override fun isLocal() = true
 
-    fun clone(settings: MagoConfiguration): MagoConfiguration {
-        return settings.also {
-            it.myMagoPath = myMagoPath
-            it.myMaxMessagesPerFile = myMaxMessagesPerFile
-            it.myTimeoutMs = myTimeoutMs
-        }
+    override fun clone(): QualityToolConfiguration = clone(MagoConfiguration())
+
+    fun clone(settings: MagoConfiguration): MagoConfiguration = settings.also {
+        it.myMagoPath = myMagoPath
+        it.myMaxMessagesPerFile = myMaxMessagesPerFile
+        it.myTimeoutMs = myTimeoutMs
+        it.isCreatedAsDefaultInterpreterConfiguration = isCreatedAsDefaultInterpreterConfiguration
+        it.isDeletedFromTheList = isDeletedFromTheList
     }
 }

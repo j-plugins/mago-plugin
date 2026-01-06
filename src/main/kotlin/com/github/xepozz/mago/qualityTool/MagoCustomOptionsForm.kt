@@ -36,5 +36,5 @@ class MagoCustomOptionsForm(
 
     override fun getDisplayName() = null
 
-    override fun validate() = Pair.create(true, "")
+    override fun validate() = Pair.create(true, "OK")
 }
