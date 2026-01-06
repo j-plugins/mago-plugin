@@ -14,8 +14,8 @@ import com.jetbrains.php.tools.quality.QualityToolProjectConfiguration
 @State(name = "MagoProjectConfiguration", storages = [Storage(StoragePathMacros.WORKSPACE_FILE)])
 class MagoProjectConfiguration : QualityToolProjectConfiguration<MagoConfiguration>(),
     PersistentStateComponent<MagoProjectConfiguration> {
-    var guardEnabled = true
-    var linterEnabled = true
+    var guardEnabled = false
+    var linterEnabled = false
     var formatterEnabled = true
     var analyzeAdditionalParameters = ""
     var formatAdditionalParameters = ""
