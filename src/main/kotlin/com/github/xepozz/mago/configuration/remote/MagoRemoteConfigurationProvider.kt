@@ -2,6 +2,7 @@ package com.github.xepozz.mago.configuration.remote
 
 import com.github.xepozz.mago.configuration.MagoConfigurableForm
 import com.github.xepozz.mago.configuration.MagoConfiguration
+import com.github.xepozz.mago.configuration.MagoConfigurationBaseManager
 import com.github.xepozz.mago.configuration.MagoConfigurationManager
 import com.github.xepozz.mago.configuration.MagoConfigurationProvider
 import com.github.xepozz.mago.qualityTool.MagoQualityToolType
@@ -45,7 +46,7 @@ class MagoRemoteConfigurationProvider : MagoConfigurationProvider() {
         val dialog = QualityToolByInterpreterDialog<MagoConfiguration?, MagoConfiguration?>(
             project,
             existingSettings,
-            "Mago",
+            MagoConfigurationBaseManager.MAGO,
             MagoConfiguration::class.java,
             MagoQualityToolType.INSTANCE
         )
