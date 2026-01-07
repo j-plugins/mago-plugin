@@ -5,19 +5,25 @@ import com.github.xepozz.mago.qualityTool.MagoQualityToolType
 import com.intellij.codeInsight.daemon.HighlightDisplayKey
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil
 import com.intellij.openapi.project.Project
 import com.intellij.profile.codeInspection.InspectionProfileManager
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurableProvider
+import com.intellij.ui.components.ActionLink
 import com.intellij.ui.components.OnOffButton
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.RowLayout
 import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
+import com.jetbrains.php.PhpBundle
 import com.jetbrains.php.lang.inspections.PhpInspectionsUtil
 import com.jetbrains.php.tools.quality.QualityToolConfigurationComboBox
+import com.jetbrains.php.tools.quality.QualityToolsIgnoreFilesConfigurable
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import javax.swing.JComponent
 
 class MagoConfigurable(val project: Project) : Configurable {
@@ -43,6 +49,18 @@ class MagoConfigurable(val project: Project) : Configurable {
                     .label("Configuration file")
                     .align(AlignX.FILL)
             }.layout(RowLayout.PARENT_GRID)
+            row {
+                cell(
+                    ActionLink(
+                        PhpBundle.message("guality.tool.configuration.show.ignored.files"),
+                        ActionListener { e: ActionEvent? ->
+                            ShowSettingsUtil.getInstance().editConfigurable(
+                                project,
+                                QualityToolsIgnoreFilesConfigurable(getQualityToolType(), project)
+                            )
+                        })
+                )
+            }
         }
         group(MagoBundle.message("settings.inspections.title")) {
             row {
