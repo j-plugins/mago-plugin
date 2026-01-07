@@ -9,44 +9,33 @@ class MagoJsonMessageHandler {
 //        println("JSON: $line")
         return JsonParser.parseString(line)
             .apply { if (this == null || this.isJsonNull) return emptyList() }
-            .asJsonObject.get("issues")
-            .asJsonArray
-            .map { it.asJsonObject }
-            .map { issue ->
-                issue.get("annotations")
-                    .asJsonArray
-                    .map { it.asJsonObject }
-                    .flatMap { annotation ->
-                        val span = annotation.get("span").asJsonObject
+            .asJsonObject
+            .getAsJsonArray("issues")
+            ?.map { it.asJsonObject }
+            ?.flatMap { issue ->
+                issue.getAsJsonArray("annotations")
+                    ?.map { it.asJsonObject }
+                    ?.mapNotNull { annotation ->
+                        val span = annotation.getAsJsonObject("span") ?: return@mapNotNull null
 
-                        listOf(
-                            MagoProblemDescription(
-                                levelToSeverity(issue.get("level").asString),
-                                span.get("start").asJsonObject.get("line").asInt,
-                                span.get("start").asJsonObject.get("offset").asInt,
-                                span.get("end").asJsonObject.get("offset").asInt,
-                                "Mago: ${issue.get("message").asString.trimEnd('.')} [${issue.get("code").asString}]",
-                                span.get("file_id").asJsonObject.get("path").asString
-                                    .let { FileUtil.toCanonicalPath(it) ?: "" },
-                                issue.get("code").asString,
-                                issue.get("help").asString,
-                                issue.get("notes").asJsonArray.map { it.asString },
-                            ),
-//                                MagoProblemDescription(
-//                                    levelToSeverity(issue.get("level").asString),
-//                                    span.get("start").asJsonObject.get("line").asInt,
-//                                    span.get("start").asJsonObject.get("offset").asInt,
-//                                    span.get("end").asJsonObject.get("offset").asInt,
-//                                    annotation.get("message").asString,
-//                                    span.get("file_id").asJsonObject.get("path").asString,
-//                                    issue.get("code").asString,
-//                                    issue.get("help").asString,
-//                                    issue.get("notes").asJsonArray.map { it.asString },
-//                                ),
+                        MagoProblemDescription(
+                            levelToSeverity(issue.get("level").asString),
+                            span.getAsJsonObject("start")?.get("line")?.asInt ?: return@mapNotNull null,
+                            span.getAsJsonObject("start")?.get("offset")?.asInt ?: return@mapNotNull null,
+                            span.getAsJsonObject("end")?.get("offset")?.asInt ?: return@mapNotNull null,
+                            "Mago: ${issue.get("message").asString.trimEnd('.')} [${issue.get("code").asString}]",
+                            span.getAsJsonObject("file_id")
+                                ?.get("path")
+                                ?.asString
+                                .let { FileUtil.toCanonicalPath(it) ?: "" },
+                            issue.get("code")?.asString ?: "",
+                            issue.get("help")?.asString ?: "",
+                            issue.getAsJsonArray("notes")?.map { it.asString } ?: emptyList(),
                         )
                     }
+                    ?: emptyList()
             }
-            .flatten()
+            ?: emptyList()
     }
 
     fun levelToSeverity(level: String?) = when (level) {
