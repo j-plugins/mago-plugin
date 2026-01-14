@@ -103,6 +103,7 @@ class MagoConfigurable(val project: Project) : Configurable {
                 .layout(RowLayout.PARENT_GRID)
                 .visible(true)
                 .enabled(false)
+                .comment("Not implemented yet.")
         }
         group(MagoBundle.message("settings.guard.title")) {
             row {
@@ -113,6 +114,7 @@ class MagoConfigurable(val project: Project) : Configurable {
                 .layout(RowLayout.PARENT_GRID)
                 .visible(true)
                 .enabled(false)
+                .comment("Not implemented yet.")
         }
         group(MagoBundle.message("settings.formatter.title")) {
             row {
