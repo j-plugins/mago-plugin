@@ -1,7 +1,7 @@
 package com.github.xepozz.mago.formatter
 
 import com.github.xepozz.mago.configuration.MagoProjectConfiguration
-import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.TextRange
@@ -28,16 +28,15 @@ class MagoExternalFormatter : ExternalFormatProcessor {
         enableBulkUpdate: Boolean,
         cursorOffset: Int
     ): TextRange? {
-        val virtualFile = source.originalFile.virtualFile
-        if (virtualFile != null) {
-            thisLogger().debug("Reformatting file: ${virtualFile.path}")
-            ProgressManager.checkCanceled()
+        val virtualFile = source.originalFile.virtualFile ?: return null
+
+        thisLogger().debug("Reformatting file: ${virtualFile.path}")
+        ProgressManager.checkCanceled()
 //            println("before: ${source.text}")
-            ApplicationManager.getApplication().executeOnPooledThread {
-                MagoReformatFile(source.project).invoke(source.project, source)
-            }
-            return null
-        }
+
+        val project = source.project
+        ReadAction.run<Throwable> { MagoReformatFile(project).invoke(project, source) }
+
         return null
     }
 
