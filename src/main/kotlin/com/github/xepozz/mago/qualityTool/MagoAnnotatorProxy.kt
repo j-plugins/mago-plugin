@@ -90,5 +90,9 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
     override fun getPairedBatchInspectionShortName() = qualityToolType.inspectionId
 
-    override fun runOnTempFiles() = false
+    /**
+     * It seems it may break work with Docker,
+     * but in another case, errors are mapped over wrong code tokes
+     */
+    override fun runOnTempFiles() = true
 }
