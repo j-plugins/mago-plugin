@@ -1,6 +1,7 @@
 package com.github.xepozz.mago.configuration
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.RoamingType
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -22,7 +23,7 @@ class MagoConfigurationManager(project: Project?) :
     internal class MagoProjectConfigurationManager : MagoConfigurationBaseManager()
 
     @Service(Service.Level.APP)
-    @State(name = "Mago", storages = [Storage("php-tools.xml")])
+    @State(name = "Mago", storages = [Storage("php-tools.xml", roamingType = RoamingType.DISABLED)])
     internal class MagoAppConfigurationManager : MagoConfigurationBaseManager()
 
     companion object {

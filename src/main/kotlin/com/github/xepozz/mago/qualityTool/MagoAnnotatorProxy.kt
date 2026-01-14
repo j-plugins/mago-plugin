@@ -5,8 +5,10 @@ import com.intellij.codeInspection.InspectionProfile
 import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
+import com.jetbrains.php.tools.quality.QualityToolConfiguration
 
 open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>() {
     companion object {
@@ -17,7 +19,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         fun getFormatOptions(settings: MagoProjectConfiguration, project: Project, files: Collection<String>) =
             buildList {
                 addWorkspace(project)
-                addConfig(settings)
+                addConfig(project, settings)
 
                 add("fmt")
                 addAll(files)
@@ -27,7 +29,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
         fun getAnalyzeOptions(settings: MagoProjectConfiguration, project: Project, filePath: String) = buildList {
             addWorkspace(project)
-            addConfig(settings)
+            addConfig(project, settings)
 
             add("analyze")
             add(filePath)
@@ -38,15 +40,35 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             .apply { println("analyze options: ${this.joinToString(" ")}") }
 
         private fun MutableList<String>.addWorkspace(project: Project) {
-            val projectPath = project.basePath ?: return
+            val projectPath = updateIfRemoteMappingExists(
+                project.basePath ?: return,
+                project,
+                INSTANCE.qualityToolType
+            )
             add("--workspace=$projectPath")
         }
 
-        private fun MutableList<String>.addConfig(settings: MagoProjectConfiguration) {
-            if (settings.configurationFile.isNotEmpty()) {
-                add("--config=${settings.configurationFile}")
+        private fun MutableList<String>.addConfig(project: Project, settings: MagoProjectConfiguration) {
+            val configurationFile = updateIfRemoteMappingExists(
+                settings.configurationFile,
+                project,
+                INSTANCE.qualityToolType
+            )
+            if (configurationFile.isNotEmpty()) {
+                add("--config=$configurationFile")
             }
         }
+    }
+
+    override fun createAnnotatorInfo(
+        file: PsiFile?,
+        tool: MagoValidationInspection?,
+        inspectionProfile: InspectionProfile?,
+        project: Project?,
+        configuration: QualityToolConfiguration?,
+        isOnTheFly: Boolean
+    ): QualityToolAnnotatorInfo<MagoValidationInspection> {
+        return super.createAnnotatorInfo(file, tool, inspectionProfile, project, configuration, false)
     }
 
     override fun getOptions(
@@ -68,5 +90,5 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
     override fun getPairedBatchInspectionShortName() = qualityToolType.inspectionId
 
-    override fun runOnTempFiles() = true
+    override fun runOnTempFiles() = false
 }

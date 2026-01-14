@@ -12,9 +12,8 @@ open class MagoConfiguration : QualityToolConfiguration() {
     private var myTimeoutMs = 30000
     private var myMaxMessagesPerFile = 100
 
+    @Attribute("custom_parameters")
     var customParameters = ""
-        @Attribute("custom_parameters")
-        get
 
     override fun compareTo(other: QualityToolConfiguration?): Int {
         if (other !is MagoConfiguration) {
@@ -34,10 +33,8 @@ open class MagoConfiguration : QualityToolConfiguration() {
 
     override fun getPresentableName(project: Project?): String = id
 
-    @Attribute("interpreter_id")
     override fun getInterpreterId(): String? = null
 
-    @Attribute("timeout")
     override fun getTimeout(): Int = myTimeoutMs
 
     override fun setTimeout(timeout: Int) {

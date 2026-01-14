@@ -24,15 +24,12 @@ class MagoConfigurableForm(project: Project, configuration: MagoConfiguration) :
         }
     }
 
-    // allow any files to be selected
-    override fun isValidToolFile(file: VirtualFile?): Boolean = true
+    override fun isValidToolFile(file: VirtualFile?): Boolean = file?.isValid ?: false
 
     override fun getCustomConfigurable(project: Project, configuration: MagoConfiguration) =
         MagoCustomOptionsForm(project, configuration)
 
     override fun getHelpTopic() = "reference.settings.php.mago"
-
-    override fun validateWithNoAnsi() = false
 
     override fun validateMessage(message: String): Pair<Boolean, String> {
         val regex = Regex("^mago (?<version>.+)$")
