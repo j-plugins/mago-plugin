@@ -1,6 +1,7 @@
 package com.github.xepozz.mago.qualityTool
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.util.TextRange
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolExecutionException
@@ -51,7 +52,7 @@ class MagoMessageProcessor(private val info: QualityToolAnnotatorInfo<*>) : Qual
                 /**
                  * temporary convert to bytes-offset to chars offset
                  */
-                val range = byteRangeToCharRange(file.text, problem.startChar, problem.endChar)
+                val range = ReadAction.compute<IntRange, Throwable> { byteRangeToCharRange(file.text, problem.startChar, problem.endChar) }
                 val textRange = TextRange(range.first, range.last + 1)
 //                val textRange = TextRange(problem.startChar, problem.endChar)
 
