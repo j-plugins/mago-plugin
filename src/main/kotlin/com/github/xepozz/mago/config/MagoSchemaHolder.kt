@@ -1,10 +1,6 @@
 package com.github.xepozz.mago.config
 
 import com.github.xepozz.mago.configuration.MagoProjectConfiguration
-import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.process.CapturingProcessAdapter
-import com.intellij.execution.process.OSProcessHandler
-import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
@@ -12,7 +8,7 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
-import kotlin.time.Duration.Companion.seconds
+import com.jetbrains.php.tools.quality.QualityToolProcessCreator
 
 @Service(Service.Level.PROJECT)
 class MagoSchemaHolder(val project: Project) {
@@ -34,23 +30,24 @@ class MagoSchemaHolder(val project: Project) {
         ApplicationManager.getApplication().executeOnPooledThread {
             val magoExecutable = magoConfiguration.toolPath
 
-            val command = GeneralCommandLine().apply {
-                exePath = magoExecutable
-                addParameter("config")
-                addParameter("--schema")
-            }
-            val processHandler = OSProcessHandler(command)
-
-            val output = ProcessOutput()
-            processHandler.addProcessListener(CapturingProcessAdapter(output))
-            processHandler.startNotify()
-            processHandler.waitFor(1.seconds.inWholeMilliseconds)
-            if (output.exitCode != 0) {
-                error("Failed to dump mago schema: ${output.stderr}")
-            }
-            mySchemaFile = LightVirtualFile("mago.schema.json", output.stdout)
-
-            restartSchemaServices()
+            QualityToolProcessCreator
+                .getToolOutput(
+                    project,
+                    null,
+                    magoExecutable,
+                    1,
+                    "Dumping schema...",
+                    null,
+                    "config",
+                    "--schema",
+                )
+                .apply {
+                    if (exitCode != 0) {
+                        error("Failed to dump mago schema: ${stderr}")
+                    }
+                    mySchemaFile = LightVirtualFile("mago.schema.json", stdout)
+                    restartSchemaServices()
+                }
         }
     }
 
