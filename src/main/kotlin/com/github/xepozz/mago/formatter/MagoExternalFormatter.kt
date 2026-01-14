@@ -1,6 +1,7 @@
 package com.github.xepozz.mago.formatter
 
 import com.github.xepozz.mago.configuration.MagoProjectConfiguration
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.TextRange
@@ -32,7 +33,9 @@ class MagoExternalFormatter : ExternalFormatProcessor {
             thisLogger().debug("Reformatting file: ${virtualFile.path}")
             ProgressManager.checkCanceled()
 //            println("before: ${source.text}")
-            MagoReformatFile(source.project).invoke(source.project, source)
+            ApplicationManager.getApplication().executeOnPooledThread {
+                MagoReformatFile(source.project).invoke(source.project, source)
+            }
             return null
         }
         return null
