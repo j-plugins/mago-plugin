@@ -5,13 +5,12 @@ import com.intellij.codeInspection.InspectionProfile
 import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.PsiFile
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolConfiguration
 import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 
 open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>() {
     companion object {
@@ -43,35 +42,21 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             .plus(ParametersList.parse(settings.analyzeAdditionalParameters))
             .apply { println("analyze options: ${this.joinToString(" ")}") }
 
-        private fun toWorkspaceRelativePath(project: Project, rawFilePath: String): String {
-            val base = project.basePath ?: return ensureMagoPath(rawFilePath)
+        private fun toWorkspaceRelativePath(project: Project, absoluteFilePath: String): String {
+            val base = project.basePath ?: return ensureMagoPath(absoluteFilePath)
+            println("project base: $base")
 
-            val relative = try {
-                val basePath: Path = Paths.get(base).normalize()
-                val filePath: Path = Paths.get(rawFilePath).normalize()
-
-                basePath.relativize(filePath).toString()
-            } catch (_: Throwable) {
-                rawFilePath
-            }
-            return ensureMagoPath(relative)
+            val relative = FileUtil.getRelativePath(base, absoluteFilePath, File.separatorChar)
+            return ensureMagoPath(relative ?: absoluteFilePath)
         }
 
         private fun ensureMagoPath(path: String): String {
-            if (path.isEmpty()) {
-                return path
-            }
-            return try {
-                if (Paths.get(path).isAbsolute) {
-                    path
-                } else if (path.startsWith("./") || path.startsWith(".\\")) {
-                    path
-                } else {
-                    // Mago ignores relative paths unless they are explicitly prefixed.
-                    ".${File.separator}$path"
-                }
-            } catch (_: Throwable) {
-                path
+            return when {
+                path.isEmpty() -> path
+                FileUtil.isAbsolute(path) -> path
+                path.startsWith("./") || path.startsWith(".\\") -> path
+                // Mago ignores relative paths unless they are explicitly prefixed.
+                else -> ".${File.separator}$path"
             }
         }
 
