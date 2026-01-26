@@ -22,9 +22,8 @@ class MagoSchemaHolder(val project: Project) {
         if (run) return
         run = true
 
-        val magoConfiguration = MagoProjectConfiguration
-            .getInstance(project)
-            .findSelectedConfiguration(project)
+        val magoConfiguration = MagoProjectConfiguration.getInstance(project)
+            .run { findConfigurationById(selectedConfigurationId, project) }
             ?: return
 
         ApplicationManager.getApplication().executeOnPooledThread {

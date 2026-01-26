@@ -5,10 +5,12 @@ import com.intellij.codeInspection.InspectionProfile
 import com.intellij.execution.configurations.ParametersList
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.PsiFile
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolConfiguration
+import java.io.File
 
 open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>() {
     companion object {
@@ -22,7 +24,8 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
                 addConfig(project, settings)
 
                 add("fmt")
-                addAll(files)
+                files.map { toWorkspaceRelativePath(project, it) }
+                    .forEach { add(it) }
             }
                 .plus(ParametersList.parse(settings.formatAdditionalParameters))
                 .apply { println("format options: ${this.joinToString(" ")}") }
@@ -32,12 +35,30 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             addConfig(project, settings)
 
             add("analyze")
-            add(filePath)
+            add(toWorkspaceRelativePath(project, filePath))
             add("--reporting-format=json")
 //            filePath?.let { add(it) }
         }
             .plus(ParametersList.parse(settings.analyzeAdditionalParameters))
             .apply { println("analyze options: ${this.joinToString(" ")}") }
+
+        private fun toWorkspaceRelativePath(project: Project, absoluteFilePath: String): String {
+            val base = project.basePath ?: return ensureMagoPath(absoluteFilePath)
+            println("project base: $base")
+
+            val relative = FileUtil.getRelativePath(base, absoluteFilePath, File.separatorChar)
+            return ensureMagoPath(relative ?: absoluteFilePath)
+        }
+
+        private fun ensureMagoPath(path: String): String {
+            return when {
+                path.isEmpty() -> path
+                FileUtil.isAbsolute(path) -> path
+                path.startsWith("./") || path.startsWith(".\\") -> path
+                // Mago ignores relative paths unless they are explicitly prefixed.
+                else -> ".${File.separator}$path"
+            }
+        }
 
         private fun MutableList<String>.addWorkspace(project: Project) {
             val projectPath = updateIfRemoteMappingExists(
