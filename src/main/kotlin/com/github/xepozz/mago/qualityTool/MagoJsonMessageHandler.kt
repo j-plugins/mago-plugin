@@ -15,6 +15,7 @@ class MagoJsonMessageHandler {
             ?.flatMap { issue ->
                 issue.getAsJsonArray("annotations")
                     ?.map { it.asJsonObject }
+                    ?.filter { it.get("kind").asString == "Primary" }
                     ?.mapNotNull { annotation ->
                         val span = annotation.getAsJsonObject("span") ?: return@mapNotNull null
                         val filePath = (span.getAsJsonObject("file_id")
