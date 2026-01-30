@@ -63,6 +63,8 @@
         <completion.contributor
                 language="PHP"
                 implementationClass="com.github.xepozz.mago.php.completion.PhpDocCompletionContributor"/>
+
+        <notificationGroup id="Mago" displayType="BALLOON" key="notification.group.mago"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">

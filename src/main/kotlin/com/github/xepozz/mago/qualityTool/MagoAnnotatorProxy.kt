@@ -1,8 +1,11 @@
 package com.github.xepozz.mago.qualityTool
 
 import com.github.xepozz.mago.configuration.MagoProjectConfiguration
+import com.github.xepozz.mago.normalizePath
 import com.intellij.codeInspection.InspectionProfile
 import com.intellij.execution.configurations.ParametersList
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
@@ -24,8 +27,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
                 addConfig(project, settings)
 
                 add("fmt")
-                files.map { toWorkspaceRelativePath(project, it) }
-                    .forEach { add(it) }
+                addAll(files.map { toWorkspaceRelativePath(project, it) })
             }
                 .plus(ParametersList.parse(settings.formatAdditionalParameters))
                 .apply { println("format options: ${this.joinToString(" ")}") }
@@ -40,24 +42,41 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 //            filePath?.let { add(it) }
         }
             .plus(ParametersList.parse(settings.analyzeAdditionalParameters))
-            .apply { println("analyze options: ${this.joinToString(" ")}") }
+            .apply {
+                val options = this.joinToString(" ")
+                println("analyze options: $options")
+                NotificationGroupManager.getInstance()
+                    .getNotificationGroup("Mago")
+                    .createNotification("Analyze options", """Options: $options, filePath: $filePath""", NotificationType.INFORMATION)
+                    .notify(project)
+            }
 
         private fun toWorkspaceRelativePath(project: Project, absoluteFilePath: String): String {
-            val base = project.basePath ?: return ensureMagoPath(absoluteFilePath)
-            println("project base: $base")
+            val basePath = project.basePath ?: return absoluteFilePath
+            return toRelativePath(basePath, absoluteFilePath)
+        }
 
-            val relative = FileUtil.getRelativePath(base, absoluteFilePath, File.separatorChar)
+        internal fun toRelativePath(basePath: String, absoluteFilePath: String): String {
+            val basePath = basePath.normalizePath()
+            val absoluteFilePath = absoluteFilePath.normalizePath()
+            println("project base: $basePath")
+
+            val relative = FileUtil.getRelativePath(basePath, absoluteFilePath, '/')
             return ensureMagoPath(relative ?: absoluteFilePath)
         }
 
-        private fun ensureMagoPath(path: String): String {
+        internal fun ensureMagoPath(path: String): String {
             return when {
                 path.isEmpty() -> path
-                FileUtil.isAbsolute(path) -> path
+                FileUtil.isAbsolute(path) || isWindowsAbsolute(path) || path.startsWith("\\\\?\\") -> path
                 path.startsWith("./") || path.startsWith(".\\") -> path
                 // Mago ignores relative paths unless they are explicitly prefixed.
                 else -> ".${File.separator}$path"
             }
+        }
+
+        private fun isWindowsAbsolute(path: String): Boolean {
+            return path.length >= 2 && path[0].isLetter() && path[1] == ':'
         }
 
         private fun MutableList<String>.addWorkspace(project: Project) {
@@ -65,7 +84,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
                 project.basePath ?: return,
                 project,
                 INSTANCE.qualityToolType
-            )
+            ).let { FileUtil.toSystemIndependentName(it) }
             add("--workspace=$projectPath")
         }
 
@@ -74,7 +93,8 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
                 settings.configurationFile,
                 project,
                 INSTANCE.qualityToolType
-            )
+            ).let { toWorkspaceRelativePath(project, it) }
+
             if (configurationFile.isNotEmpty()) {
                 add("--config=$configurationFile")
             }
