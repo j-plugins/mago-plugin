@@ -7,8 +7,12 @@ import com.intellij.execution.configurations.ParametersList
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
@@ -23,21 +27,36 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
 
         fun getFormatOptions(settings: MagoProjectConfiguration, project: Project, files: Collection<String>) =
             buildList {
-                addWorkspace(project)
-                addConfig(project, settings)
+                val workspace = findWorkspace(project, files.firstOrNull())
+                addWorkspace(workspace, project)
+                addConfig(workspace, project, settings)
 
                 add("fmt")
-                addAll(files.map { toWorkspaceRelativePath(project, it) })
+                addAll(files.map { toWorkspaceRelativePath(workspace, it) })
             }
                 .plus(ParametersList.parse(settings.formatAdditionalParameters))
-                .apply { println("format options: ${this.joinToString(" ")}") }
+                .apply { val options = this.joinToString(" ")
+                    println("format options: $options")
+                    NotificationGroupManager.getInstance()
+                        .getNotificationGroup("Mago")
+                        .createNotification("Format options", """Options: $options, filePaths: ${files.joinToString(", ") { it }}""", NotificationType.INFORMATION)
+                        .notify(project)
+                }
+
+        fun findWorkspace(project: Project, filePath: String?): VirtualFile {
+            if (filePath == null) return project.baseDir
+            val file = LocalFileSystem.getInstance().findFileByPath(filePath) ?: return project.baseDir
+            val module = ModuleUtilCore.findModuleForFile(file, project) ?: return project.baseDir
+            return module.rootManager.contentRoots.firstOrNull() ?: project.baseDir
+        }
 
         fun getAnalyzeOptions(settings: MagoProjectConfiguration, project: Project, filePath: String) = buildList {
-            addWorkspace(project)
-            addConfig(project, settings)
+            val workspace = findWorkspace(project, filePath)
+            addWorkspace(workspace, project)
+            addConfig(workspace, project, settings)
 
             add("analyze")
-            add(toWorkspaceRelativePath(project, filePath))
+            add(toWorkspaceRelativePath(workspace, filePath))
             add("--reporting-format=json")
 //            filePath?.let { add(it) }
         }
@@ -54,6 +73,9 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         private fun toWorkspaceRelativePath(project: Project, absoluteFilePath: String): String {
             val basePath = project.basePath ?: return absoluteFilePath
             return toRelativePath(basePath, absoluteFilePath)
+        }
+        private fun toWorkspaceRelativePath(workspace: VirtualFile, absoluteFilePath: String): String {
+            return toRelativePath(workspace.path, absoluteFilePath)
         }
 
         internal fun toRelativePath(basePath: String, absoluteFilePath: String): String {
@@ -79,21 +101,21 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
             return path.length >= 2 && path[0].isLetter() && path[1] == ':'
         }
 
-        private fun MutableList<String>.addWorkspace(project: Project) {
+        private fun MutableList<String>.addWorkspace(workspace: VirtualFile, project: Project) {
             val projectPath = updateIfRemoteMappingExists(
-                project.basePath ?: return,
+                workspace.path,
                 project,
                 INSTANCE.qualityToolType
             ).let { FileUtil.toSystemIndependentName(it) }
             add("--workspace=$projectPath")
         }
 
-        private fun MutableList<String>.addConfig(project: Project, settings: MagoProjectConfiguration) {
+        private fun MutableList<String>.addConfig(workspace: VirtualFile, project: Project, settings: MagoProjectConfiguration) {
             val configurationFile = updateIfRemoteMappingExists(
                 settings.configurationFile,
                 project,
-                INSTANCE.qualityToolType
-            ).let { toWorkspaceRelativePath(project, it) }
+                INSTANCE.qualityToolType,
+            ).let { toWorkspaceRelativePath(workspace, it) }
 
             if (configurationFile.isNotEmpty()) {
                 add("--config=$configurationFile")
