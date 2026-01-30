@@ -17,6 +17,12 @@ class MagoJsonMessageHandler {
                     ?.map { it.asJsonObject }
                     ?.mapNotNull { annotation ->
                         val span = annotation.getAsJsonObject("span") ?: return@mapNotNull null
+                        val filePath = (span.getAsJsonObject("file_id")
+                            ?.get("path")
+                            ?.asString
+                            ?.removePrefix("\\\\?\\")
+                            ?.let { FileUtil.toSystemIndependentName(it) }
+                            ?: return@mapNotNull null)
 
                         MagoProblemDescription(
                             levelToSeverity(issue.get("level").asString),
@@ -24,10 +30,7 @@ class MagoJsonMessageHandler {
                             span.getAsJsonObject("start")?.get("offset")?.asInt ?: return@mapNotNull null,
                             span.getAsJsonObject("end")?.get("offset")?.asInt ?: return@mapNotNull null,
                             "Mago: ${issue.get("message").asString.trimEnd('.')} [${issue.get("code").asString}]",
-                            span.getAsJsonObject("file_id")
-                                ?.get("path")
-                                ?.asString
-                                .let { FileUtil.toCanonicalPath(it) ?: "" },
+                            filePath,
                             issue.get("code")?.asString ?: "",
                             issue.get("help")?.asString ?: "",
                             issue.getAsJsonArray("notes")?.map { it.asString } ?: emptyList(),
