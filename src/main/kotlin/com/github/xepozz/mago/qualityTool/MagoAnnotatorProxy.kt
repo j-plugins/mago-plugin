@@ -115,7 +115,7 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
                 settings.configurationFile,
                 project,
                 INSTANCE.qualityToolType,
-            ).let { toWorkspaceRelativePath(workspace, it) }
+            )
 
             if (configurationFile.isNotEmpty()) {
                 add("--config=$configurationFile")
