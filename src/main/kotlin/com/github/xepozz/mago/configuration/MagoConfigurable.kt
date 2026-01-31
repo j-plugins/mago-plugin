@@ -104,6 +104,20 @@ class MagoConfigurable(val project: Project) : Configurable {
                     .align(AlignX.FILL)
             }.layout(RowLayout.PARENT_GRID)
         }
+        group(MagoBundle.message("settings.formatter.title")) {
+            row {
+                cell(OnOffButton())
+                    .label(MagoBundle.message("settings.enabled"))
+                    .bindSelected(settings::formatterEnabled)
+            }.layout(RowLayout.PARENT_GRID)
+            row {
+                textField()
+                    .label("Additional parameters")
+                    .bindText(settings::formatAdditionalParameters)
+                    .comment("Read more: mago fmt --help")
+                    .align(AlignX.FILL)
+            }.layout(RowLayout.PARENT_GRID)
+        }
         group(MagoBundle.message("settings.linter.title")) {
             row {
                 cell(OnOffButton())
@@ -125,20 +139,6 @@ class MagoConfigurable(val project: Project) : Configurable {
                 .visible(true)
                 .enabled(false)
                 .comment("Not implemented yet.")
-        }
-        group(MagoBundle.message("settings.formatter.title")) {
-            row {
-                cell(OnOffButton())
-                    .label(MagoBundle.message("settings.enabled"))
-                    .bindSelected(settings::formatterEnabled)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                textField()
-                    .label("Additional parameters")
-                    .bindText(settings::formatAdditionalParameters)
-                    .comment("Read more: mago fmt --help")
-                    .align(AlignX.FILL)
-            }.layout(RowLayout.PARENT_GRID)
         }
     }
 
