@@ -20,6 +20,7 @@ class MagoProjectConfiguration : QualityToolProjectConfiguration<MagoConfigurati
     var analyzeAdditionalParameters = ""
     var formatAdditionalParameters = ""
     var configurationFile = ""
+    var debug = false
 
     override fun getState() = this
 

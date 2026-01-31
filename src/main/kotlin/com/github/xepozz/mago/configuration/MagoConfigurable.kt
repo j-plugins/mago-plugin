@@ -3,6 +3,7 @@ package com.github.xepozz.mago.configuration
 import com.github.xepozz.mago.MagoBundle
 import com.github.xepozz.mago.qualityTool.MagoQualityToolType
 import com.intellij.codeInsight.daemon.HighlightDisplayKey
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ShowSettingsUtil
@@ -12,6 +13,7 @@ import com.intellij.profile.codeInspection.InspectionProfileManager
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurableProvider
 import com.intellij.ui.components.ActionLink
+import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.OnOffButton
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.RowLayout
@@ -25,6 +27,7 @@ import com.jetbrains.php.tools.quality.QualityToolsIgnoreFilesConfigurable
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JComponent
+import javax.swing.SwingConstants
 
 class MagoConfigurable(val project: Project) : Configurable {
     val settings = project.getService(MagoProjectConfiguration::class.java)
@@ -36,6 +39,13 @@ class MagoConfigurable(val project: Project) : Configurable {
             browserLink("Download Mago", "https://github.com/carthage-software/mago")
             browserLink("Report a plugin bug", "https://github.com/j-plugins/mago-plugin/issues")
             browserLink("Request a plugin feature", "https://github.com/j-plugins/mago-plugin/issues")
+
+            cell(JBLabel("Debug", AllIcons.Toolwindows.ToolWindowDebugger, SwingConstants.RIGHT))
+                .align(AlignX.RIGHT)
+                .resizableColumn()
+            cell(OnOffButton())
+                    .bindSelected(settings::debug)
+                    .align(AlignX.RIGHT)
         }
         group(MagoBundle.message("settings.options.title")) {
             row {
