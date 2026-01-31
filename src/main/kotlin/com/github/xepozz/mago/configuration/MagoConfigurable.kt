@@ -37,15 +37,16 @@ class MagoConfigurable(val project: Project) : Configurable {
     var myPanel = panel {
         row {
             browserLink("Download Mago", "https://github.com/carthage-software/mago")
-            browserLink("Report a plugin bug", "https://github.com/j-plugins/mago-plugin/issues")
-            browserLink("Request a plugin feature", "https://github.com/j-plugins/mago-plugin/issues")
+            browserLink("Documentation", "https://mago.carthage.software/guide/getting-started")
+            browserLink("Report bug", "https://github.com/j-plugins/mago-plugin/issues")
+            browserLink("Request feature", "https://github.com/j-plugins/mago-plugin/issues")
 
             cell(JBLabel("Debug", AllIcons.Toolwindows.ToolWindowDebugger, SwingConstants.RIGHT))
                 .align(AlignX.RIGHT)
                 .resizableColumn()
             cell(OnOffButton())
-                    .bindSelected(settings::debug)
-                    .align(AlignX.RIGHT)
+                .bindSelected(settings::debug)
+                .align(AlignX.RIGHT)
         }
         group(MagoBundle.message("settings.options.title")) {
             row {
@@ -72,7 +73,7 @@ class MagoConfigurable(val project: Project) : Configurable {
                 )
             }
         }
-        group(MagoBundle.message("settings.inspections.title")) {
+        group(MagoBundle.message("settings.analyzer.title")) {
             row {
                 cell(
                     PhpInspectionsUtil.createPanelWithSettingsLink(
@@ -95,6 +96,8 @@ class MagoConfigurable(val project: Project) : Configurable {
                         inspectionProfileManager.currentProfile
                             .setToolEnabled(getInspectionShortName(), it)
                     })
+                browserLink("Documentation", "https://mago.carthage.software/tools/analyzer/overview")
+                    .align(AlignX.RIGHT)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 textField()
@@ -109,6 +112,8 @@ class MagoConfigurable(val project: Project) : Configurable {
                 cell(OnOffButton())
                     .label(MagoBundle.message("settings.enabled"))
                     .bindSelected(settings::formatterEnabled)
+                browserLink("Documentation", "https://mago.carthage.software/tools/formatter/overview")
+                    .align(AlignX.RIGHT)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 textField()
@@ -123,6 +128,8 @@ class MagoConfigurable(val project: Project) : Configurable {
                 cell(OnOffButton())
                     .label(MagoBundle.message("settings.enabled"))
                     .bindSelected(settings::linterEnabled)
+                browserLink("Documentation", "https://mago.carthage.software/tools/linter/overview")
+                    .align(AlignX.RIGHT)
             }
                 .layout(RowLayout.PARENT_GRID)
                 .visible(true)
@@ -134,6 +141,8 @@ class MagoConfigurable(val project: Project) : Configurable {
                 cell(OnOffButton())
                     .label(MagoBundle.message("settings.enabled"))
                     .bindSelected(settings::guardEnabled)
+                browserLink("Documentation", "https://mago.carthage.software/tools/guard/overview")
+                    .align(AlignX.RIGHT)
             }
                 .layout(RowLayout.PARENT_GRID)
                 .visible(true)
