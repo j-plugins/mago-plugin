@@ -30,7 +30,7 @@ class LayerReference(
 
     override fun getVariants(): Array<out Any?> {
         return MagoLayersIndexUtil.getAll(element.project)
-            .map {
+            .map { it ->
                 val namespaces = it.value.flatMap { it.values }.joinToString { "," }
                 LookupElementBuilder.create(it.key)
                     .withIcon(MagoIcons.MAGO)

@@ -1,5 +1,6 @@
 package com.github.xepozz.mago.qualityTool
 
+import com.github.xepozz.mago.MagoBundle
 import com.github.xepozz.mago.configuration.MagoConfigurable
 import com.github.xepozz.mago.configuration.MagoConfigurableForm
 import com.github.xepozz.mago.configuration.MagoConfiguration
@@ -16,7 +17,7 @@ import com.jetbrains.php.tools.quality.QualityToolType
 import com.jetbrains.php.tools.quality.QualityToolValidationGlobalInspection
 
 class MagoQualityToolType : QualityToolType<MagoConfiguration>() {
-    override fun getDisplayName() = MAGO
+    override fun getDisplayName() = MagoBundle.message("quality.tool.mago")
 
     override fun getQualityToolBlackList(project: Project) = MagoBlackList.getInstance(project)
 

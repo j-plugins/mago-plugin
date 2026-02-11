@@ -19,7 +19,10 @@ import org.jdom.Element
 class MagoRemoteConfigurationProvider : MagoConfigurationProvider() {
     override fun canLoad(tagName: String) = tagName == MAGO_BY_INTERPRETER
 
-    override fun load(element: Element) = XmlSerializer.deserialize(element, MagoRemoteConfiguration::class.java)
+    override fun load(element: Element) = XmlSerializer.deserialize(
+        element,
+        MagoRemoteConfiguration::class.java
+    )
 
     override fun createConfigurationForm(
         project: Project,
@@ -43,7 +46,7 @@ class MagoRemoteConfigurationProvider : MagoConfigurationProvider() {
     ): MagoConfiguration? {
         if (project == null) return null
 
-        val dialog = QualityToolByInterpreterDialog<MagoConfiguration?, MagoConfiguration?>(
+        val dialog = QualityToolByInterpreterDialog(
             project,
             existingSettings,
             MagoConfigurationBaseManager.MAGO,

@@ -1,13 +1,15 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
+        <!-- When the TOML plugin is present, treat mago.toml as TOML, so we get syntax highlighting and completions -->
         <fileType
+                id="mago.toml.toml"
                 name="Mago File"
                 implementationClass="com.github.xepozz.mago.file.MagoTomlFileType"
                 fieldName="INSTANCE"
                 language="TOML"
                 fileNames="mago.toml"
                 fileNamesCaseInsensitive="mago.toml"
-                order="before mago.toml"
+                order="first"
         />
         <fileBasedIndex
                 implementation="com.github.xepozz.mago.config.index.MagoLayersIndex"

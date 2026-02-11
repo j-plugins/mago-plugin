@@ -1,0 +1,109 @@
+{
+  "issues": [
+    {
+      "code": "mixed-assignment",
+      "level": "Warning",
+      "message": "Assigning `mixed` type to a variable may lead to unexpected behavior.",
+      "help": "Consider using a more specific type to avoid potential issues.",
+      "notes": [
+        "Using `mixed` can lead to runtime errors if the variable is used in a way that assumes a specific type."
+      ],
+      "edits": [],
+      "annotations": [
+        {
+          "kind": "Primary",
+          "message": "Assigning `mixed` type here",
+          "span": {
+            "file_id": {"path": "/tmp/test/input.php"},
+            "start": {"line": 4, "offset": 33},
+            "end": {"offset": 37}
+          }
+        }
+      ]
+    },
+    {
+      "code": "mixed-argument",
+      "level": "Error",
+      "message": "Invalid argument type for argument #1 of `substr`: expected `string`, but found `mixed`.",
+      "help": "Add specific type hints or assertions to the argument value.",
+      "notes": [
+        "The type `mixed` is too general and does not match the expected type `string`."
+      ],
+      "edits": [],
+      "annotations": [
+        {
+          "kind": "Primary",
+          "message": "Argument has type `mixed`",
+          "span": {
+            "file_id": {"path": "/tmp/test/input.php"},
+            "start": {"line": 5, "offset": 68},
+            "end": {"offset": 72}
+          }
+        }
+      ]
+    },
+    {
+      "code": "too-many-arguments",
+      "level": "Error",
+      "message": "Too many arguments provided for function `substr`.",
+      "help": "Remove the extra argument(s).",
+      "notes": [
+        "Expected 3 argument(s), but received 6."
+      ],
+      "edits": [],
+      "annotations": [
+        {
+          "kind": "Primary",
+          "message": "Unexpected argument provided here",
+          "span": {
+            "file_id": {"path": "/tmp/test/input.php"},
+            "start": {"line": 5, "offset": 80},
+            "end": {"offset": 81}
+          }
+        }
+      ]
+    },
+    {
+      "code": "undefined-variable",
+      "level": "Error",
+      "message": "Undefined variable: `$res`.",
+      "help": "Check for typos, ensure `$res` is assigned, or verify its scope.",
+      "notes": [
+        "Did you perhaps mean one of these defined variables: `$var`, `$argv`, `$argc`?"
+      ],
+      "edits": [],
+      "annotations": [
+        {
+          "kind": "Primary",
+          "message": "Variable `$res` used here but not defined",
+          "span": {
+            "file_id": {"path": "/tmp/test/input.php"},
+            "start": {"line": 6, "offset": 95},
+            "end": {"offset": 99}
+          }
+        }
+      ]
+    },
+    {
+      "code": "mixed-argument",
+      "level": "Error",
+      "message": "The first value for `echo` is too general.",
+      "help": "Add a specific type hint or assertion for this value.",
+      "notes": [
+        "The expected type `null|scalar` is more specific."
+      ],
+      "edits": [],
+      "annotations": [
+        {
+          "kind": "Primary",
+          "message": "Type `mixed` is too broad",
+          "span": {
+            "file_id": {"path": "/tmp/test/input.php"},
+            "start": {"line": 6, "offset": 95},
+            "end": {"offset": 99}
+          }
+        }
+      ]
+    }
+  ]
+}
