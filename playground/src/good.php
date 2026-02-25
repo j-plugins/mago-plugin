@@ -2,7 +2,7 @@
 
 echo 'gooo' . a(2);
 
-function a($f):string
+function a($f): string
 {
     return 123;
 }
