@@ -1,120 +1,44 @@
 package com.github.xepozz.mago.qualityTool
 
-import com.github.xepozz.mago.configuration.MagoProjectConfiguration
-import com.github.xepozz.mago.normalizePath
-import com.github.xepozz.mago.utils.DebugLogger
+import com.intellij.codeHighlighting.HighlightDisplayLevel
 import com.intellij.codeInspection.InspectionProfile
-import com.intellij.execution.configurations.ParametersList
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.rootManager
-import com.intellij.openapi.util.io.FileUtil
-import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.jetbrains.php.tools.quality.QualityToolAnnotator
 import com.jetbrains.php.tools.quality.QualityToolAnnotatorInfo
 import com.jetbrains.php.tools.quality.QualityToolConfiguration
+import com.jetbrains.php.tools.quality.QualityToolMessage
+import com.jetbrains.php.tools.quality.QualityToolMessageProcessor
 
+/**
+ * Minimal stub required by the QualityTool infrastructure.
+ * The actual annotation pipeline uses [com.github.xepozz.mago.annotator.MagoExternalAnnotator].
+ */
 open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>() {
     companion object {
-        private val LOG: Logger = Logger.getInstance(MagoAnnotatorProxy::class.java)
-
         val INSTANCE = MagoAnnotatorProxy()
-
-        fun getFormatOptions(settings: MagoProjectConfiguration, project: Project, files: Collection<String>) =
-            buildList {
-                val workspace = findWorkspace(project, files.firstOrNull())
-                addWorkspace(workspace, project)
-                addConfig(workspace, project, settings)
-
-                add("fmt")
-                addAll(files.map { toWorkspaceRelativePath(workspace, it) })
-            }
-                .plus(ParametersList.parse(settings.formatAdditionalParameters))
-                .apply {
-                    DebugLogger.inform(
-                        project,
-                        "Format options",
-                        """Options: ${joinToString(" ")}, filePaths: ${files.joinToString(", ") { it }}""",
-                    )
-
-                }
-
-        fun findWorkspace(project: Project, filePath: String?): VirtualFile {
-            if (filePath == null) return project.baseDir
-            val file = LocalFileSystem.getInstance().findFileByPath(filePath) ?: return project.baseDir
-            val module = ModuleUtilCore.findModuleForFile(file, project) ?: return project.baseDir
-            return module.rootManager.contentRoots.firstOrNull() ?: project.baseDir
-        }
-
-        fun getAnalyzeOptions(settings: MagoProjectConfiguration, project: Project, filePath: String) = buildList {
-            val workspace = findWorkspace(project, filePath)
-            addWorkspace(workspace, project)
-            addConfig(workspace, project, settings)
-
-            add("analyze")
-            add(toWorkspaceRelativePath(workspace, filePath))
-            add("--reporting-format=json")
-//            filePath?.let { add(it) }
-        }
-            .plus(ParametersList.parse(settings.analyzeAdditionalParameters))
-            .apply {
-                DebugLogger.inform(
-                    project,
-                    "Analyze options",
-                    """Options: ${joinToString(" ")}, filePath: $filePath""",
-                )
-            }
-
-        private fun toWorkspaceRelativePath(workspace: VirtualFile, absoluteFilePath: String): String {
-            return toRelativePath(workspace.path, absoluteFilePath)
-        }
-
-        internal fun toRelativePath(basePath: String, absoluteFilePath: String): String {
-            val basePath = basePath.normalizePath()
-            val absoluteFilePath = absoluteFilePath.normalizePath()
-
-            val relative = FileUtil.getRelativePath(basePath, absoluteFilePath, '/')
-            return ensureMagoPath(relative ?: absoluteFilePath)
-        }
-
-        internal fun ensureMagoPath(path: String): String = when {
-            path.isEmpty() -> path
-            FileUtil.isAbsolute(path) || isWindowsAbsolute(path) || path.startsWith('\\') -> path
-            path.startsWith("./") || path.startsWith(".\\") -> path
-            // Mago ignores relative paths unless they are explicitly prefixed.
-            else -> "./$path"
-        }
-
-        private fun isWindowsAbsolute(path: String): Boolean = path.length >= 2 && path[0].isLetter() && path[1] == ':'
-
-        private fun MutableList<String>.addWorkspace(workspace: VirtualFile, project: Project) {
-            val projectPath = updateIfRemoteMappingExists(
-                workspace.path,
-                project,
-                INSTANCE.qualityToolType
-            ).let { FileUtil.toSystemIndependentName(it) }
-            add("--workspace=$projectPath")
-        }
-
-        private fun MutableList<String>.addConfig(
-            workspace: VirtualFile,
-            project: Project,
-            settings: MagoProjectConfiguration
-        ) {
-            val configurationFile = updateIfRemoteMappingExists(
-                settings.configurationFile,
-                project,
-                INSTANCE.qualityToolType,
-            )
-
-            if (configurationFile.isNotEmpty()) {
-                add("--config=$configurationFile")
-            }
-        }
     }
+
+    override fun getQualityToolType() = MagoQualityToolType.INSTANCE
+
+    override fun createMessageProcessor(collectedInfo: QualityToolAnnotatorInfo<MagoValidationInspection>) =
+        object : QualityToolMessageProcessor(collectedInfo) {
+            override fun parseLine(line: String) {}
+            override fun severityToDisplayLevel(severity: QualityToolMessage.Severity) =
+                HighlightDisplayLevel.WEAK_WARNING
+
+            override fun getQualityToolType() = MagoQualityToolType.INSTANCE
+            override fun done() {}
+        }
+
+    override fun getPairedBatchInspectionShortName() = qualityToolType.inspectionId
+
+    override fun getOptions(
+        filePath: String?,
+        inspection: MagoValidationInspection,
+        profile: InspectionProfile?,
+        project: Project,
+    ): List<String> = emptyList()
 
     override fun createAnnotatorInfo(
         file: PsiFile?,
@@ -127,28 +51,5 @@ open class MagoAnnotatorProxy : QualityToolAnnotator<MagoValidationInspection>()
         return super.createAnnotatorInfo(file, tool, inspectionProfile, project, configuration, false)
     }
 
-    override fun getOptions(
-        filePath: String?,
-        inspection: MagoValidationInspection,
-        profile: InspectionProfile?,
-        project: Project,
-    ): List<String> {
-        checkNotNull(filePath)
-        val settings = project.getService(MagoProjectConfiguration::class.java)
-
-        return getAnalyzeOptions(settings, project, filePath)
-    }
-
-    override fun getQualityToolType() = MagoQualityToolType.INSTANCE
-
-    override fun createMessageProcessor(collectedInfo: QualityToolAnnotatorInfo<MagoValidationInspection>) =
-        MagoMessageProcessor(collectedInfo)
-
-    override fun getPairedBatchInspectionShortName() = qualityToolType.inspectionId
-
-    /**
-     * It seems it may break work with Docker,
-     * but in another case, errors are mapped over wrong code tokes
-     */
     override fun runOnTempFiles() = true
 }

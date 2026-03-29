@@ -37,9 +37,9 @@ class FileSetReferenceContributor : PsiReferenceContributor() {
                                                         PlatformPatterns.string().oneOf(
                                                             "[source]",
                                                             "[guard]",
-                                                            "[excludes]",
                                                             "[linter]",
                                                             "[analyzer]",
+                                                            "[formatter]",
                                                         )
                                                     )
                                             )
@@ -69,6 +69,8 @@ class FileSetReferenceContributor : PsiReferenceContributor() {
                                             .withText(
                                                 PlatformPatterns.string().oneOf(
                                                     "[analyzer]",
+                                                    "[linter]",
+                                                    "[guard]",
                                                 )
                                             )
                                     )

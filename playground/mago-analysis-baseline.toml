@@ -1,0 +1,7 @@
+variant = "loose"
+
+[[issues]]
+file = "src/baseline.php"
+code = "non-existent-function"
+message = "Function `doesNotExist` could not be found."
+count = 1

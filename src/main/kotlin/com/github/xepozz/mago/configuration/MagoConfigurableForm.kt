@@ -1,5 +1,6 @@
 package com.github.xepozz.mago.configuration
 
+import com.github.xepozz.mago.MagoBundle
 import com.github.xepozz.mago.configuration.MagoConfigurationBaseManager.Companion.MAGO
 import com.github.xepozz.mago.qualityTool.MagoCustomOptionsForm
 import com.github.xepozz.mago.qualityTool.MagoQualityToolType
@@ -35,7 +36,7 @@ class MagoConfigurableForm(project: Project, configuration: MagoConfiguration) :
         val regex = Regex("^mago (?<version>.+)$")
 
         return regex.find(message)?.groups?.get("version")
-            ?.let { Pair.create(true, "OK, Mago version ${it.value}") }
+            ?.let { Pair.create(true, MagoBundle.message("validation.versionOk", it.value)) }
             ?: Pair.create(false, PhpBundle.message("quality.tool.can.not.determine.version", message))
     }
 }

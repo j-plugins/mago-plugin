@@ -7,7 +7,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
     <depends optional="true" config-file="language-toml.xml">org.toml.lang</depends>
-    <depends optional="true" config-file="language-json.xml">com.intellij.modules.json</depends>
+    <depends optional="true" config-file="mago-optional-json.xml">com.intellij.modules.json</depends>
     <depends config-file="php-remote-interpreter.xml" optional="true">
         org.jetbrains.plugins.phpstorm-remote-interpreter
     </depends>
@@ -25,41 +25,23 @@
                 fileNamesCaseInsensitive="mago.toml"
                 order="last"
         />
-        <externalFormatProcessor
-                implementation="com.github.xepozz.mago.formatter.MagoExternalFormatter"
-                order="first"/>
+        <formattingService
+                implementation="com.github.xepozz.mago.formatter.MagoExternalFormatter"/>
         <projectConfigurable
                 instance="com.github.xepozz.mago.configuration.MagoConfigurable"
                 bundle="messages.MagoBundle"
-                key="configurable.quality.tool.php.mago"
+                key="mago.title"
                 id="settings.php.quality.tools.php.mago"
                 parentId="settings.php.quality.tools"
                 groupWeight="30"
         />
 
-        <localInspection
-                language="PHP"
-                shortName="MagoValidationInspection"
-                groupPath="PHP"
-                groupName="Quality tools"
-                enabledByDefault="true"
-                level="WEAK WARNING"
-                implementationClass="com.github.xepozz.mago.qualityTool.MagoValidationInspection"
-                key="inspection.mago.display.name"/>
-
-        <globalInspection
-                language="PHP"
-                shortName="MagoGlobal"
-                groupPath="PHP"
-                groupName="Quality tools"
-                enabledByDefault="true"
-                level="WEAK WARNING"
-                implementationClass="com.github.xepozz.mago.qualityTool.MagoGlobalInspection"
-                key="inspection.mago.global.display.name"/>
+        <postStartupActivity
+                implementation="com.github.xepozz.mago.composer.MagoComposerAutoDetectActivity"/>
 
         <externalAnnotator
                 language="PHP"
-                implementationClass="com.github.xepozz.mago.qualityTool.MagoAnnotatorProxy"/>
+                implementationClass="com.github.xepozz.mago.annotator.MagoExternalAnnotator"/>
         <completion.contributor
                 language="PHP"
                 implementationClass="com.github.xepozz.mago.php.completion.PhpDocCompletionContributor"/>
@@ -70,8 +52,6 @@
     <extensions defaultExtensionNs="com.jetbrains.php">
         <tools.quality.type
                 implementation="com.github.xepozz.mago.qualityTool.MagoQualityToolType"/>
-        <composerConfigClient
-                implementation="com.github.xepozz.mago.composer.MagoComposerConfig"/>
         <openSettingsProvider
                 implementation="com.github.xepozz.mago.composer.MagoOpenSettingsProvider"/>
         <config.interpreters.PhpInterpretersStateListener
@@ -84,11 +64,4 @@
                 name="magoConfigurationProvider"
                 interface="com.github.xepozz.mago.configuration.MagoConfigurationProvider"/>
     </extensionPoints>
-    <actions>
-        <action
-                id="com.github.xepozz.mago.qualityTool.MagoAddToIgnoredAction"
-                class="com.github.xepozz.mago.qualityTool.MagoAddToIgnoredAction">
-            <add-to-group group-id="PHPQualityToolsAddToIgnoredList" anchor="last"/>
-        </action>
-    </actions>
 </idea-plugin>

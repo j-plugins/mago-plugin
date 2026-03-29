@@ -13,6 +13,6 @@ class MagoGlobalInspection : QualityToolValidationGlobalInspection(), ExternalAn
     override fun getSharedLocalInspectionTool() = MagoValidationInspection()
 
     companion object {
-        private val MAGO_ANNOTATOR_INFO = Key.create<List<ProblemDescription>>("ANNOTATOR_INFO_MAGO")
+        val MAGO_ANNOTATOR_INFO = Key.create<List<ProblemDescription>>("ANNOTATOR_INFO_MAGO")
     }
 }

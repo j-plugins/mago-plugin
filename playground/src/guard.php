@@ -1,13 +1,13 @@
 <?php
 
-# ッッッ  
+// ッッッ
 $a = 1 + 111;
-echo blabla(); 
+echo blabla();
 1 + 111;
 echo blabla();
 1 + 111;
-echo    blabla();  
+echo blabla();
 1 + 111;
 echo blabla();
 
-$aa = 12313;                  
+$aa = 12313;

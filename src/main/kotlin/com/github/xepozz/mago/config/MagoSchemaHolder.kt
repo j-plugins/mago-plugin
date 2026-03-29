@@ -1,6 +1,9 @@
 package com.github.xepozz.mago.config
 
 import com.github.xepozz.mago.configuration.MagoProjectConfiguration
+import com.github.xepozz.mago.execution.LocalMagoRunner
+import com.github.xepozz.mago.execution.MagoRunner
+import com.github.xepozz.mago.execution.RemoteInterpreterMagoRunner
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
@@ -8,7 +11,6 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
-import com.jetbrains.php.tools.quality.QualityToolProcessCreator
 
 @Service(Service.Level.PROJECT)
 class MagoSchemaHolder(val project: Project) {
@@ -18,35 +20,38 @@ class MagoSchemaHolder(val project: Project) {
     fun getSchema() = mySchemaFile
 
     fun dumpSchema() {
-        // don't run dump several times
         if (run) return
         run = true
 
-        val magoConfiguration = MagoProjectConfiguration.getInstance(project)
-            .run { findConfigurationById(selectedConfigurationId, project) }
-            ?: return
+        val settings = MagoProjectConfiguration.getInstance(project)
+
+        val (runner, magoExecutable) = chooseRunnerAndExe(settings)
+        if (magoExecutable.isBlank()) return
 
         ApplicationManager.getApplication().executeOnPooledThread {
-            val magoExecutable = magoConfiguration.toolPath
+            val out = runner.run(
+                project = project,
+                exePath = magoExecutable,
+                args = listOf("config", "--schema"),
+                timeoutMs = 30_000
+            )
 
-            QualityToolProcessCreator
-                .getToolOutput(
-                    project,
-                    null,
-                    magoExecutable,
-                    1,
-                    "Dumping schema...",
-                    null,
-                    "config",
-                    "--schema",
-                )
-                .apply {
-                    if (exitCode != 0) {
-                        error("Failed to dump mago schema: ${stderr}")
-                    }
-                    mySchemaFile = LightVirtualFile("mago.schema.json", stdout)
-                    restartSchemaServices()
-                }
+            if (out.exitCode != 0) {
+                run = false
+                return@executeOnPooledThread
+            }
+
+            mySchemaFile = LightVirtualFile("mago.schema.json", out.stdout)
+            restartSchemaServices()
+        }
+    }
+
+    private fun chooseRunnerAndExe(settings: MagoProjectConfiguration): Pair<MagoRunner, String> {
+        val interpreter = settings.resolveInterpreter(project)
+        return if (interpreter != null && interpreter.isRemote) {
+            RemoteInterpreterMagoRunner(interpreter) to settings.getEffectiveToolPath(project)
+        } else {
+            LocalMagoRunner() to settings.getEffectiveToolPath(project)
         }
     }
 

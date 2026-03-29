@@ -21,6 +21,7 @@ literal-named-argument = { enabled = false }
 halstead = { effort-threshold = 7000 }
 
 [analyzer]
+baseline = "mago-analysis-baseline.toml"
 find-unused-definitions = true
 find-unused-expressions = false
 analyze-dead-code = false

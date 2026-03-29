@@ -1,0 +1,32 @@
+{
+  "issues": [
+    {
+      "code": "mixed-argument",
+      "level": "Error",
+      "message": "Invalid argument type for argument #1 of `substr`: expected `string`, but found `mixed`.",
+      "help": "Add specific type hints or assertions to the argument value.",
+      "notes": [
+        "The type `mixed` is too general and does not match the expected type `string`."
+      ],
+      "edits": [],
+      "annotations": [
+        {
+          "kind": "Primary",
+          "message": "Argument has type `mixed`",
+          "span": {
+            "file_id": {
+              "path": "/tmp/test/1.php"
+            },
+            "start": {
+              "line": 6,
+              "offset": 64
+            },
+            "end": {
+              "offset": 68
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

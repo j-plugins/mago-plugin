@@ -60,7 +60,6 @@ class LayersReferenceContributor : PsiReferenceContributor() {
     }
 
     companion object {
-        private const val ALL_PREFIX = "@all"
         private const val LAYER_PREFIX = "@layer:"
     }
 }
