@@ -1,6 +1,7 @@
 package dev.jplugins.qualitytools.core.migration
 
 import dev.jplugins.qualitytools.core.context.QtLogger
+import dev.jplugins.qualitytools.core.context.log
 import dev.jplugins.qualitytools.core.options.OptionSpec
 import dev.jplugins.qualitytools.core.options.OptionsBag
 
