@@ -8,6 +8,10 @@ kotlin {
     compilerOptions { freeCompilerArgs.addAll("-Xjvm-default=all") }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api(project(":quality-tools-sdk:core"))
     api(project(":quality-tools-sdk:php"))

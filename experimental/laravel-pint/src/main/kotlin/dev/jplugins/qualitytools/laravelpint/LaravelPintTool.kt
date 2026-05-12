@@ -42,7 +42,7 @@ public class LaravelPintTool : QualityTool {
     public val schema: LaravelPintOptionsSchema = LaravelPintOptionsSchema()
     override val optionsSchema: OptionsSchema = schema
 
-    override val binaryValidator: BinaryValidator = LaravelPintVersionValidator()
+    override val binaryValidator: BinaryValidator = LaravelPintVersionValidator
 
     /**
      * Preserved verbatim from the legacy plugin's

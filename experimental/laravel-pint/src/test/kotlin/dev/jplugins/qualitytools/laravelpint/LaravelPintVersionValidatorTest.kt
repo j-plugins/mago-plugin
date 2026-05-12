@@ -13,7 +13,7 @@ import org.junit.Test
  */
 class LaravelPintVersionValidatorTest {
 
-    private val validator = LaravelPintVersionValidator()
+    private val validator = LaravelPintVersionValidator
 
     @Test
     fun `recognises plain Laravel Pint v1_13_6 output`() {

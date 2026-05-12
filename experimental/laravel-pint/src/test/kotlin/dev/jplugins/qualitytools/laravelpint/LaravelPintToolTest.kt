@@ -90,10 +90,10 @@ class LaravelPintToolTest {
     }
 
     @Test
-    fun `binaryValidator is wired and is a LaravelPintVersionValidator`() {
+    fun `binaryValidator is wired and is the LaravelPintVersionValidator singleton`() {
         val v = tool.binaryValidator
         assertNotNull(v)
-        assertTrue(v is LaravelPintVersionValidator)
+        assertSame(LaravelPintVersionValidator, v)
     }
 
     @Test
