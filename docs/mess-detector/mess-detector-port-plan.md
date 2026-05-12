@@ -516,66 +516,42 @@ phpmd XML reader carry irreducible work the SDK can't subsume.
 
 ## 7. Order of work (when we get to coding)
 
-Sequenced so each step is mergeable independently. Numbered against
-the existing phase-doc plan, NOT replacing it. Assumes the PHPStan
-SDK gaps (PHPStan §7 step 1) have already landed — PHPMD is the
-**second** adopter and re-uses their work.
+Mergeable in sequence. Assumes the PHPStan SDK gaps (PHPStan §7
+step 1) have already landed — PHPMD is the second adopter.
 
-1. **PHPMD-specific SDK gap fixes** (phase doc edits + corresponding
-   code):
-   - 4.3 `compositeKvPathArg` + `PathAwareArgRewriter` walking
-     parts → phase 01 (`ToolArgs.kt` addendum) + phase 05.
-   - 4.5 `ConfigSource.staleness(...)` + storage-side collector
-     → phase 02 + phase 04.
+1. **PHPMD-specific SDK gap fixes** (≤ 50 LOC each, ship as
+   "phase patches v2" after PHPStan v1):
+   - 4.3 `compositeKvPathArg` + rewriter parts walk → phase 01
+     + phase 05.
+   - 4.5 `ConfigSource.staleness(...)` + storage collector →
+     phase 02 + phase 04.
    - 4.6 `ListSpec<CompoundSpec>.onItemAdded` hook → phase 07.
-   - 4.8 short-name preservation single-entry acceptance bullet
-     → phase 10a.1 (no code, doc-only).
-
-   Each is small (≤ 50 LOC). Ship as one "phase patches v2" PR
-   after the PHPStan patches land in v1.
-
-2. **PHPMD tool registration** — phase 01-style minimal port:
-   `PhpMessDetectorTool` + `PhpMessDetectorOptionsSchema` +
-   `PhpmdXmlReader`. Result: PHPMD visible in Settings with the
-   six built-in checkboxes and an empty custom-rulesets table; no
-   validate button, no Composer auto-detect, no remote support.
-
-3. **PHPMD version detection** — `PhpMessDetectorVersionValidator`
-   wired into the validate button (reuses PHPStan gap 4.1).
-
-4. **PHPMD Composer auto-detect** —
-   `PhpMessDetectorComposerOnDetectedHook` wired into the generic
-   `ComposerBinarySourceType` (reuses PHPStan gap 4.5). Replaces
-   `MessDetectorComposerConfig` entirely. Adds both ruleset-from-
-   root and ruleset-from-scripts behaviors.
-
-5. **PHPMD remote** — `<depends optional="true">` on the PHP-
-   interpreter source type from `:php` (zero PHPMD code beyond
-   that). Tests against the 30 s default timeout from PHPStan gap
-   4.4.
-
-6. **PHPMD path-aware CSV rewriting** — once gap 4.3 lands, switch
-   `buildArgs` to emit `compositeKvPathArg`. Verify on a fake
-   Docker source that the path parts round-trip but the short-name
-   parts don't.
-
-7. **PHPMD reactivity to interpreter changes** — once gap 4.5
-   lands, verify the explicit `MessDetectorInterpreterStateListener`
-   has nothing left to do and delete it; remove the
-   `<applicationListener>` entry from the plugin.xml.
-
-8. **PHPMD migration** — `PhpMessDetectorMigration` ports legacy
-   `MessDetectorOptionsConfiguration` XML + the
-   `MessDetectorSettingsTransferStartupActivity` profile→options
-   carry-over into the unified storage. Stress-tests the new
-   `ListSpec<CompoundSpec>` migration round-trip.
-
-9. **PHPMD inspection-shortname preservation** — verify
+   - 4.8 single-entry short-name acceptance bullet → phase 10a.1
+     (doc only).
+2. **PHPMD tool registration** — minimal port: `PhpMessDetectorTool`
+   + `PhpMessDetectorOptionsSchema` + `PhpmdXmlReader`. Visible in
+   Settings with checkboxes and an empty custom-rulesets table.
+3. **Version validator** wired into the validate button (reuses
+   PHPStan gap 4.1).
+4. **Composer auto-detect** — `PhpMessDetectorComposerOnDetectedHook`
+   on the generic `ComposerBinarySourceType` (reuses PHPStan gap
+   4.5). Replaces `MessDetectorComposerConfig`.
+5. **Remote** — optional `<depends>` on the `:php` interpreter
+   source type. Tests against the 30 s default timeout from PHPStan
+   gap 4.4.
+6. **CSV path-aware rewriting** — once gap 4.3 lands, switch
+   `buildArgs` to `compositeKvPathArg`. Fake-Docker test that path
+   parts map but short-name parts don't.
+7. **Interpreter-change reactivity** — once gap 4.5 lands, verify
+   the explicit `MessDetectorInterpreterStateListener` has nothing
+   to do and remove it.
+8. **Migration** — `PhpMessDetectorMigration` ports the legacy
+   options + descriptor-list transfer. Stress-tests
+   `ListSpec<CompoundSpec>` round-trip.
+9. **Short-name preservation** — verify
    `MessDetectorValidationInspection` is the sole short name
-   emitted by the SDK bridge (phase 10a.1, single-name case).
-
-10. **Cleanup**: delete the legacy plugin's classes once the new
-    build is validated (mirror of phase 10c for PHPMD).
+   emitted (phase 10a.1, single-name case).
+10. **Cleanup**: delete legacy classes once validated.
 
 ---
 
