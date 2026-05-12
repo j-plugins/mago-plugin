@@ -98,7 +98,13 @@ class LaravelPintToolTest {
 
     @Test
     fun `optionsSchema is a LaravelPintOptionsSchema and shares toolId`() {
-        assertTrue(tool.optionsSchema is LaravelPintOptionsSchema)
+        // `tool.optionsSchema` is statically typed as the concrete
+        // class, so we exercise the runtime type via the interface
+        // form (`OptionsSchema`) — that's what the SDK's EP-side
+        // wiring will hand back.
+        val asInterface: dev.jplugins.qualitytools.core.options.OptionsSchema =
+            tool.optionsSchema
+        assertTrue(asInterface is LaravelPintOptionsSchema)
         assertEquals(tool.id, tool.optionsSchema.toolId)
         // The `schema` accessor returns the same instance as the
         // interface-typed `optionsSchema`, so callers in `buildArgs`

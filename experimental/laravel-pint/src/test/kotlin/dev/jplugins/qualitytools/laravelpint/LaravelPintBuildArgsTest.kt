@@ -107,10 +107,15 @@ class LaravelPintBuildArgsTest {
 
     @Test
     fun `additionalArgs are appended after the standard flags`() {
+        // We seed `formatAdditionalArgs` at the **top level** of the
+        // bag: `MapOptionsBag.mode()` returns a fresh overlay every
+        // call, so we rely on the documented fallback semantics
+        // (overlay misses → parent answers). The build code reads
+        // through `ctx.options.mode(mode.id)`, which still resolves
+        // to the value via that fallback.
         val bag = MapOptionsBag()
         bag[schema.verbose] = true
-        val modeBag = bag.mode(LaravelPintTool.MODE_FORMAT)
-        modeBag[schema.formatAdditionalArgs] = "--bail --using=laravel"
+        bag[schema.formatAdditionalArgs] = "--bail --using=laravel"
         val ctx = FakeRunContext(tool, options = bag)
         val args = LaravelPintBuildArgs.build(
             ctx, formatMode, FakeTarget("/proj/src/Foo.php"), schema,
@@ -129,8 +134,7 @@ class LaravelPintBuildArgsTest {
     @Test
     fun `blank additionalArgs do nothing`() {
         val bag = MapOptionsBag()
-        val modeBag = bag.mode(LaravelPintTool.MODE_FORMAT)
-        modeBag[schema.formatAdditionalArgs] = "   \t  "
+        bag[schema.formatAdditionalArgs] = "   \t  "
         val ctx = FakeRunContext(tool, options = bag)
         val args = LaravelPintBuildArgs.build(
             ctx, formatMode, FakeTarget("/proj/src/Foo.php"), schema,

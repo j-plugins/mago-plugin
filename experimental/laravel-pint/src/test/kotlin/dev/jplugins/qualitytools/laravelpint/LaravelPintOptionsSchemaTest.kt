@@ -1,6 +1,7 @@
 package dev.jplugins.qualitytools.laravelpint
 
 import dev.jplugins.qualitytools.core.options.BoolSpec
+import dev.jplugins.qualitytools.core.options.OptionSpec
 import dev.jplugins.qualitytools.core.options.PathSpec
 import dev.jplugins.qualitytools.core.options.StringSpec
 import dev.jplugins.qualitytools.testing.MapOptionsBag
@@ -24,9 +25,12 @@ class LaravelPintOptionsSchemaTest {
     fun `customConfig spec uses configured key and is a PathSpec`() {
         assertEquals(LaravelPintOptionsSchema.CUSTOM_CONFIG_KEY, schema.customConfig.key)
         assertEquals("customConfig", schema.customConfig.key)
+        // The spec is declared `val customConfig: PathSpec`, so the
+        // type assertion goes through the erased `OptionSpec<*>` list.
+        val asSpec: OptionSpec<*> = schema.specs.single { it.key == "customConfig" }
         assertTrue(
             "customConfig must be a PathSpec so the rewriter can remap it",
-            schema.customConfig is PathSpec,
+            asSpec is PathSpec,
         )
         assertTrue(schema.customConfig.isPath)
         assertEquals("config_file", schema.customConfig.role)
@@ -36,7 +40,8 @@ class LaravelPintOptionsSchemaTest {
     fun `verbose spec defaults to false and is a BoolSpec`() {
         assertEquals(LaravelPintOptionsSchema.VERBOSE_KEY, schema.verbose.key)
         assertEquals("verbose", schema.verbose.key)
-        assertTrue(schema.verbose is BoolSpec)
+        val asSpec: OptionSpec<*> = schema.specs.single { it.key == "verbose" }
+        assertTrue(asSpec is BoolSpec)
         assertFalse(schema.verbose.default)
     }
 
