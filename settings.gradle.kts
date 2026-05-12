@@ -10,4 +10,5 @@ include(
     ":quality-tools-sdk:ui",
     ":quality-tools-sdk:testing",
     ":quality-tools-sdk:testing-junit5",
+    ":experimental:phpcs",
 )
