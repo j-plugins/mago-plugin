@@ -14,4 +14,5 @@ include(
     ":experimental:laravel-pint",
     ":experimental:mess-detector",
     ":experimental:phpstan",
+    ":experimental:psalm",
 )
