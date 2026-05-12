@@ -8,6 +8,10 @@ kotlin {
     compilerOptions { freeCompilerArgs.addAll("-Xjvm-default=all") }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api(project(":quality-tools-sdk:testing"))
     api("org.junit.jupiter:junit-jupiter-api:5.11.0")
