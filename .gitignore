@@ -5,3 +5,6 @@
 .kotlin
 .qodana
 build
+
+# Claude Code agent worktrees (transient; agents commit into their own worktrees)
+.claude/
