@@ -10,4 +10,8 @@ include(
     ":quality-tools-sdk:ui",
     ":quality-tools-sdk:testing",
     ":quality-tools-sdk:testing-junit5",
+    ":experimental:php-cs-fixer",
+    ":experimental:laravel-pint",
+    ":experimental:mess-detector",
+    ":experimental:phpstan",
 )
