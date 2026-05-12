@@ -3,3 +3,11 @@ plugins {
 }
 
 rootProject.name = "Mago"
+
+include(
+    ":quality-tools-sdk:core",
+    ":quality-tools-sdk:php",
+    ":quality-tools-sdk:ui",
+    ":quality-tools-sdk:testing",
+    ":quality-tools-sdk:testing-junit5",
+)

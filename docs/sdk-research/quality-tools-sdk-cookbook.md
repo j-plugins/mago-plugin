@@ -5,6 +5,17 @@
 > описывал высокоуровневый дизайн. Здесь — **рецепт-кукбук для авторов
 > плагинов**: как написать новый тул, новый источник конфига (Docker,
 > DDEV, mise, …), новый scope, новый reader, не залезая в SDK.
+>
+> **Важно (post-cycle-5):** Контрактный truth-source — это
+> `docs/phases/*.md`. Некоторые сигнатуры в этом кукбуке писались до
+> ревью-циклов 1–5 и могут расходиться с финальными интерфейсами
+> (`requiredPluginIds: Set<String>` вместо `Set<PluginId>`, `ToolArg`
+> вместо `String` в `buildArgs`, `read(run: ToolRun, ...)` вместо
+> `read(out: ProcessOutput, ...)`, `ToolMessageBuilder` вместо
+> `ToolMessage.copy()`, `EnvMutator.mutate(env: MutableMap, ...)`
+> вместо `GeneralCommandLine`, и т. д.). При расхождении доверяйте
+> фазовым докам — отдельный sync-pass обновит этот кукбук, когда `:core`
+> будет реализован.
 
 ## 0. Принципы, по которым строится API
 
