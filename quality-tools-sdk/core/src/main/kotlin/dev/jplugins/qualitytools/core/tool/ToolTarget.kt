@@ -1,5 +1,6 @@
 package dev.jplugins.qualitytools.core.tool
 
+import dev.jplugins.qualitytools.core.context.ThreadingPolicy
 import dev.jplugins.qualitytools.core.scope.ResolvedScope
 
 /**
@@ -11,5 +12,6 @@ public interface ToolTarget {
     public val normalizedPath: String
 
     /** The cli token representing this target. Plugins build args from it. */
+    @ThreadingPolicy("any")
     public fun toCliArg(scope: ResolvedScope): ToolArg
 }

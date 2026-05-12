@@ -1,5 +1,7 @@
 package dev.jplugins.qualitytools.core.source
 
+import dev.jplugins.qualitytools.core.context.ThreadingPolicy
+
 /**
  * One entry on the user's per-tool profile list. A `ConfigSource` knows
  * how to produce a runnable [ResolvedBinary] (e.g. local path, composer
@@ -28,5 +30,6 @@ public interface ConfigSource {
      * Implementations MUST NOT throw — return `null` and log via
      * `ctx.logger` for diagnostic info.
      */
+    @ThreadingPolicy("background")
     public suspend fun resolve(ctx: ResolveContext): ResolvedBinary?
 }

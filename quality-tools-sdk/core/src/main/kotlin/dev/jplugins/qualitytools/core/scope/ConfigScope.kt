@@ -1,5 +1,6 @@
 package dev.jplugins.qualitytools.core.scope
 
+import dev.jplugins.qualitytools.core.context.ThreadingPolicy
 import dev.jplugins.qualitytools.core.tool.ToolTarget
 
 /**
@@ -10,9 +11,11 @@ import dev.jplugins.qualitytools.core.tool.ToolTarget
 public interface ConfigScope {
     public val typeId: String
 
+    @ThreadingPolicy("any")
     public fun matches(target: ToolTarget, ctx: MatchContext): Boolean
 
     /** Higher = more specific. 0 means catch-all. */
+    @ThreadingPolicy("any")
     public fun specificity(target: ToolTarget, ctx: MatchContext): Int
 }
 

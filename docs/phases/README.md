@@ -118,3 +118,47 @@ by one phase.
     `StringValueAliases` table in `:core`. Renaming `"on_save"` →
     `"onSave"` is a one-line registration; old user XML keeps
     working without per-reader code.
+22. **Debuggability for plugin & tool authors** is a first-class
+    feature, not an afterthought. The SDK MUST give downstream
+    developers a clear, low-friction picture of what's running and
+    why. Concrete obligations:
+    - **Stack traces stay informative**: SDK code does not swallow
+      exceptions silently; when it must catch (e.g. a third-party
+      `ResultReader` throwing on malformed input), it logs the full
+      throwable via `QtLogger` and re-surfaces it as an
+      `internal_error` `ToolMessage`. No `catch { }` blocks without
+      both a log line AND a user-visible message.
+    - **Every tool run is debug-loggable**: `ToolRunner` MUST emit
+      one `QtLogger` debug entry per run with `{toolId, modeId,
+      profileId, command, env-keys, timeoutMs, stdinBytes, exitCode,
+      durationMs, canceled}`. Sensitive values (`PLUGIN_STDIN_B64`,
+      auth tokens) are redacted to `<…N bytes…>`.
+    - **A "debug" toggle** lives on `QualityToolsProjectStorage`
+      and, when on, raises `QtLogger` defaults from `info` to
+      `debug` AND attaches per-run stdout/stderr tails (last 4 KiB)
+      to internal-error notifications.
+    - **`ToolRegistry`, `ConfigSourceRegistry`, and every other
+      `*Registry`** expose `all()` for introspection (already in
+      rule 8 cross-cutting table). The SDK ships a built-in
+      `"Quality Tools: Diagnostic Info"` action in `:ui` that
+      dumps every registered extension's `id`/`typeId`/availability/
+      `requiredPluginIds` plus the active profile per tool, suitable
+      for paste-into-issue.
+    - **Names of internals are stable identifiers**, not anonymous
+      objects: every `MessageEnricher`, `ToolFixHandler`, `EnvMutator`,
+      `PostFixHook` exposes a non-empty `id` so logs and stack
+      frames carry it.
+    - **Sources of `internal_error` messages** always populate
+      `category` with a vendor-prefixed dotted name
+      (`<toolId>.timeout`, `<sourceTypeId>.unavailable`,
+      `<toolId>.parse_error`) so users can grep their logs.
+    - **No `runBlocking` without a clear thread name**: the
+      annotator wrapper sets the coroutine name to
+      `"qt:<toolId>:<modeId>:<file>"` so a thread dump on a hang
+      points at the right tool.
+
+    The SDK's existing acceptance criteria gain a corresponding
+    bullet: "no public SDK method swallows `Throwable` without
+    `ctx.logger.log("warn"/"error", ..., throwable)` AND a routed
+    `ToolMessage` or `ValidationResult.message`." Reviewers reject
+    PRs that violate this.

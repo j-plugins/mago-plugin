@@ -35,6 +35,7 @@ public interface CancellationToken {
 private object NeverCancellationToken : CancellationToken {
     override val isCanceled: Boolean = false
     override fun throwIfCanceled() {}
-    override fun cancel(): Unit = throw UnsupportedOperationException("CancellationToken.Never cannot be cancelled")
+    /** Silently no-ops; the token contractually never observes cancellation. */
+    override fun cancel(): Unit = Unit
     override fun onCancel(handler: () -> Unit): AutoCloseable = AutoCloseable { }
 }

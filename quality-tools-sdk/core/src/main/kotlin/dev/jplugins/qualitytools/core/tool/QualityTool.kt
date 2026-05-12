@@ -1,5 +1,6 @@
 package dev.jplugins.qualitytools.core.tool
 
+import dev.jplugins.qualitytools.core.context.ThreadingPolicy
 import dev.jplugins.qualitytools.core.context.ToolRunContext
 import dev.jplugins.qualitytools.core.options.OptionsSchema
 
@@ -64,6 +65,7 @@ public interface QualityTool {
      * `ctx.scope`, `ctx.profile.source` (e.g. for `detectedVersion`-aware
      * branching).
      */
+    @ThreadingPolicy("background")
     public fun buildArgs(
         ctx: ToolRunContext,
         mode: ToolMode,

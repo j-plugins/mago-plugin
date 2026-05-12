@@ -16,6 +16,11 @@ import dev.jplugins.qualitytools.core.context.ThreadingPolicy
  * Plugin authors typically delegate to a regex via
  * `:php`'s `PhpToolVersionParser`; only override if a custom protocol is
  * needed (e.g. a tool that prints to stderr only).
+ *
+ * Note: this is a regular `interface` (two members — [versionArgs] and
+ * [validate]); the SAM `fun interface` shorthand isn't applicable.
+ * It is still designed to be invoked as a small lambda-shaped object
+ * where the override of [versionArgs] is rare.
  */
 public interface BinaryValidator {
     /** Args used to probe the tool. Default `["--version"]`. */
