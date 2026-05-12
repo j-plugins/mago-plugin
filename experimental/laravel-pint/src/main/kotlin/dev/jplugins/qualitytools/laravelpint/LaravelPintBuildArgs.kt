@@ -5,7 +5,6 @@ import dev.jplugins.qualitytools.core.tool.ToolArg
 import dev.jplugins.qualitytools.core.tool.ToolMode
 import dev.jplugins.qualitytools.core.tool.ToolTarget
 import dev.jplugins.qualitytools.core.tool.kvPathArg
-import dev.jplugins.qualitytools.core.tool.pathArg
 import dev.jplugins.qualitytools.core.tool.plainArg
 
 /**
@@ -73,24 +72,4 @@ public object LaravelPintBuildArgs {
         //    rewrite the file in place).
         addAll(mode.defaultArgs)
     }
-
-    /**
-     * Convenience overload used only by unit tests where building a
-     * `ToolTarget` from a raw path is the shorter spelling.
-     */
-    internal fun buildFromRawPath(
-        ctx: ToolRunContext,
-        mode: ToolMode,
-        targetPath: String,
-        schema: LaravelPintOptionsSchema,
-    ): List<ToolArg> = build(
-        ctx = ctx,
-        mode = mode,
-        target = object : ToolTarget {
-            override val normalizedPath: String = targetPath
-            override fun toCliArg(scope: dev.jplugins.qualitytools.core.scope.ResolvedScope) =
-                pathArg(targetPath)
-        },
-        schema = schema,
-    )
 }

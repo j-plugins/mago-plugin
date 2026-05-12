@@ -1,7 +1,6 @@
 package dev.jplugins.qualitytools.laravelpint
 
 import dev.jplugins.qualitytools.core.context.ToolRunContext
-import dev.jplugins.qualitytools.core.options.OptionsSchema
 import dev.jplugins.qualitytools.core.tool.BinaryValidator
 import dev.jplugins.qualitytools.core.tool.Capabilities
 import dev.jplugins.qualitytools.core.tool.ExecutionStyles
@@ -29,7 +28,9 @@ import dev.jplugins.qualitytools.core.tool.ToolTarget
  * Identity discipline (SDK rule 11): equality on [id]. Inherited from
  * `QualityTool`'s default contract — we don't override `equals` here.
  */
-public class LaravelPintTool : QualityTool {
+public class LaravelPintTool(
+    public val schema: LaravelPintOptionsSchema = LaravelPintOptionsSchema(),
+) : QualityTool {
 
     override val id: String = ID
     override val displayName: String = "Laravel Pint"
@@ -39,8 +40,7 @@ public class LaravelPintTool : QualityTool {
 
     override val resultReaderId: String = RESULT_READER_ID
 
-    public val schema: LaravelPintOptionsSchema = LaravelPintOptionsSchema()
-    override val optionsSchema: OptionsSchema = schema
+    override val optionsSchema: LaravelPintOptionsSchema = schema
 
     override val binaryValidator: BinaryValidator = LaravelPintVersionValidator
 
@@ -77,21 +77,29 @@ public class LaravelPintTool : QualityTool {
      *    `php://stdin` reliably; same default as `ToolMode`'s
      *    interface contract, kept explicit for documentation.
      */
-    private object FormatMode : ToolMode {
-        override val id: String = MODE_FORMAT
+    public object FormatMode : ToolMode {
+        override val id: String = LaravelPintOptionsSchema.MODE_FORMAT
         override val displayName: String = "Format"
         override val verb: String = "format"
         override val executionStyle: String = ExecutionStyles.FORMAT
         override val formattingOutputMode: String = FormattingOutputModes.IN_PLACE
         override val defaultArgs: List<ToolArg> = emptyList()
         override val supportsStdin: Boolean = false
-        override val supportsFix: Boolean = true
+
+        /** `supportsFix` is N/A — this *is* the fix path. Matches the
+         *  CS-Fixer port's `FormatMode.supportsFix = false` convention. */
+        override val supportsFix: Boolean = false
+
         override val pathArgKeys: Set<String> = setOf("--config=")
     }
 
     public companion object {
         public const val ID: String = "laravel-pint"
-        public const val MODE_FORMAT: String = "format"
+
+        /** Mirror of [LaravelPintOptionsSchema.MODE_FORMAT] so callers
+         *  outside this module needn't import the schema class just to
+         *  refer to the mode id. */
+        public const val MODE_FORMAT: String = LaravelPintOptionsSchema.MODE_FORMAT
 
         /** Reader id of the CS-Fixer-style diff-XML reader Pint reuses
          *  once the on-the-fly mode lands. Hardcoded here so all the

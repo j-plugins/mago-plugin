@@ -63,12 +63,12 @@ public class LaravelPintOptionsSchema : OptionsSchema {
             "after the SDK-built args.",
     )
 
-    override val toolId: String = LaravelPintTool.ID
+    override val toolId: String = TOOL_ID
 
     override val specs: List<OptionSpec<*>> = listOf(customConfig, verbose)
 
     override val modeSchemas: Map<String, ModeSchema> = mapOf(
-        LaravelPintTool.MODE_FORMAT to FormatModeSchema(formatEnabled, formatAdditionalArgs),
+        MODE_FORMAT to FormatModeSchema(formatEnabled, formatAdditionalArgs),
     )
 
     private class FormatModeSchema(
@@ -79,6 +79,13 @@ public class LaravelPintOptionsSchema : OptionsSchema {
     }
 
     public companion object {
+        /** Same as [LaravelPintTool.ID]; duplicated here so the schema
+         *  has no compile-time dependency on the tool class. */
+        public const val TOOL_ID: String = "laravel-pint"
+
+        /** Sole mode id this tool currently exposes. */
+        public const val MODE_FORMAT: String = "format"
+
         public const val CUSTOM_CONFIG_KEY: String = "customConfig"
         public const val VERBOSE_KEY: String = "verbose"
         public const val MODE_FORMAT_ENABLED_KEY: String = "format.enabled"

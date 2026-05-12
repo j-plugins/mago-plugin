@@ -15,4 +15,5 @@ include(
     ":experimental:mess-detector",
     ":experimental:phpstan",
     ":experimental:psalm",
+    ":experimental:phpcs",
 )
